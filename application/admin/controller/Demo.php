@@ -17,9 +17,6 @@ use app\common\builder\table;
 use app\common\builder\tableHeaderBtn\addBtn;
 use app\common\builder\tree;
 use app\common\builder\ViewBuilder;
-use app\index\validate\test\User;
-use app\Lib\Api\Demo\Dow;
-use app\Lib\TopClient;
 use think\Url;
 
 class Demo
@@ -737,9 +734,6 @@ class Demo
     public function dow(){
 //        sleep(3);
         if(request()->isAjax()){
-//            $model = new Dow();
-//            $model->setArgs('uid',1);
-//            $result =  (new TopClient($model))->getSuccessData();
             $data =  ['dow'=>true];
             return $data;
         }
