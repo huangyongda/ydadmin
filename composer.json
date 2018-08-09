@@ -12,11 +12,5 @@
     "topthink/framework": "=5.0.10",
     "topthink/think-captcha": "v1.0.7"
 
-  },
-  "autoload": {
-    "psr-4": {
-      "huangyongda\\huaweiPush\\": "src/huaweiPush/",
-      "huangyongda\\Http\\": "src/Http/"
-    }
   }
 }
