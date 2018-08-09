@@ -8,7 +8,7 @@
 composer create-project huangyongda/ydadmin
 ```
 ```
-
+/*
 ##目前已经实现功能
     1，城市自动联动 
     2，分页自动适应（没有记录总数返回时候只显示上一页下一页） 
@@ -22,7 +22,7 @@ composer create-project huangyongda/ydadmin
     .
     .
     .
-```
+*/
 //用法例子
    public function index(){
         $table=new table();
