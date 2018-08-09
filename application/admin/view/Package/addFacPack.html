@@ -1,0 +1,48 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+{block name="foot"}
+
+<script>
+    layui.use(['form'], function() {
+        var form = layui.form(),
+            layer = layui.layer;
+        var $ = layui.jquery;
+        var html = "<div>\n" +
+            "    <div class=\"layui-form\">\n" +
+            "        <div class=\"layui-input-block\" id = \"checkid\">\n" +
+            "        </div>\n" +
+            "        <div class=\"layui-form-mid layui-word-aux remark_childkid\"></div>\n" +
+            "    </div>\n" +
+            "</div>";
+        $(".layui-input-block").parent().append(html);
+        form.on('select(kid)',function (data) {
+            $(":checkbox").parent().empty();//清空编辑页时默认数据
+            $("#checkid").empty();//清空div内的内容
+            var kid = data.value;
+            var requestUrl = "{:Url('Package/getChildKindsList')}";
+            $.ajax({
+                    url:requestUrl,
+                    type:'post',
+                    dateType:'json',
+                    data:{"kid":kid},
+                    success:function(data){
+                        // $("#checkid").empty();//清空div内的内容
+                        var strhtml = "";
+                        $(data).each(function(index,value){
+                             strhtml  += "<input type='checkbox' id='checkKind' name='kind[]' " + "value = '" + value.id +"'  title='"+value.title +"'>";
+                        });
+                        if(!strhtml){
+                                layer.msg('你所选择的品类无子类,请重新选择');
+                                return false;
+                        }
+                        $("#checkid").append(strhtml);//生成checkbox
+                        form.render("checkbox");//重载复选框
+
+
+                    }
+            });
+        })
+    });
+</script>
+{/block}

@@ -1,0 +1,101 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+
+{// 异步提交成功之后 }
+{block name="submit_ajax_success_af"}
+{// 异步提交成功之后 <script> // }
+
+
+layer.msg('api请求成功', {icon: 1});
+
+layer.confirm(data.msg, {
+icon: 1,
+btn: [] //按钮
+});
+
+//{// 异步提交成功之后 </script> }
+{/block}
+
+
+
+
+{// 页脚代码 }
+{block name="foot"}
+<form style="display: none" id="DocSearchform" action='http://doc.cug2313.com:8090/index.php?s=/home/item/show/item_id/15' method="post"  target="_blank" >
+    <input type="hidden" name="keyword" id="apiDocSearchName" value="">
+    <input type="hidden" name="item_id"  value="15">
+    <input type="submit" class="layui-btn layui-btn-small layui-btn-normal">
+</form>
+<script>
+    layui.use(['form'], function() {
+        var $ = layui.jquery;
+        var form = layui.form();
+
+
+        form.on('select(ApiKind)', function(data){
+            $.ajax({
+                url:"{:url('admin/api_tool/getApiNameByKind')}",
+                dataType:"json",
+                data:{kindName:data.value},
+                type:"post",
+                success:function(data){
+
+                    if(!data.rel && data.msg){
+                        layer.msg(data.msg, {icon: 2});
+                        return false;
+                    }
+                    var op_html_str="<option value=\"\">请选择</option>";
+
+                    $.each(data.list,function (key,val) {
+                        op_html_str+="<option value=\""+val+"\">"+val+"</option>";
+                    });
+                    $('select[name=ApiName]').html(op_html_str);
+                    layui.form().render('select');//重新渲染
+                }
+            });
+        });
+        form.on('select(ApiName)', function(selectdata){
+            $(".addapiobj").remove();
+            $.ajax({
+                url:"{:url('admin/api_tool/getApiClassObj')}",
+                dataType:"json",
+                data:{ApiKind:$("select[name=ApiKind]").val(),ApiName:selectdata.value},
+                type:"post",
+                success:function(data){
+
+                    if(!data.rel && data.msg){
+                        layer.msg(data.msg, {icon: 2});
+                        return false;
+                    }
+                    var html_str="";
+                    $("#apiDocSearchName").val(selectdata.value);
+                    html_str+="<div class=\"layui-form-item addapiobj\"> "+
+                        "<div class=\"layui-form-item\"> "+
+                        "<label class=\"layui-form-label\"></label> "+
+                        "<div class=\"layui-input-inline\"> "+
+                        "<a id='docBtn' class=\"layui-btn layui-btn-small layui-btn-normal  \">查看接口文档</a> "+
+                        "</div> "+
+                        "</div> "+
+                        "</div>";;
+                    $.each(data.list,function (key,val) {
+                        html_str+="<div class=\"layui-form-item addapiobj\"> "+
+                            "<div class=\"layui-form-item\"> "+
+                            "<label class=\"layui-form-label\">"+key+"</label> "+
+                            "<div class=\"layui-input-inline\"> "+
+                            "<input type=\"text\" name=\""+key+"\" autocomplete=\"\"   value=\""+val+"\"  class=\"layui-input\"> "+
+                            "</div> "+
+                            "</div> "+
+                            "</div>";;
+                    });
+                    $('select[name=ApiName]').parents(".layui-form-item").after(html_str);
+                    $("#docBtn").click(function () {
+                        $("#DocSearchform").submit();
+                    });
+                }
+            });
+        });
+
+    });
+</script>
+{/block}

@@ -1,0 +1,31 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+{block name="foot"}
+<script>
+    layui.use(['form', 'layedit', 'laydate','upload'], function() {
+        var form = layui.form(),
+            layer = layui.layer,
+            laydate = layui.laydate;
+        var $ = layui.jquery;
+        var html = "<button class=\"layui-btn layui-btn-html\" data-url=\"{:Url('ProductPrice/addService')}\"  data-BtnName=\"添加服务项\" lay-filter=\"service\">添加服务项</button>\n";
+        $(".layui-btn-primary").parent().append(html);
+        $(".layui-btn-html").click(function(){
+            var url = $(this).attr("data-url");
+            var title = $(this).attr("data-BtnName");
+            parent.layer.open({
+                type: 2,
+                title:title,
+                shadeClose: true,
+                area: ['700px', '450px'],
+                fixed: false, //不固定
+                maxmin: true,
+                shade: 0.3,
+                content: url
+            });
+            return false;
+        });
+    });
+</script>
+
+{/block}

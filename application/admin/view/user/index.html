@@ -1,0 +1,23 @@
+{block name="top_content"}
+{/block}
+{extend name="$viewbasetpl" /}
+{block name="foot"}
+<script>
+
+</script>
+{/block}
+
+{// 页面异步提交成功之后 }
+{block name="page_ajax_success_af"}
+    var list = result['list'];
+    $(list).each(function(index,element){
+        var disabled =  element.disabled;
+        if(disabled == true){
+            $("#content tr:eq("+index+")").find("a").eq(1).addClass('layui-btn-disabled');
+            $("#content tr:eq("+index+")").find("a").eq(1).attr('data-opentype','');
+        }
+
+    });
+
+
+{/block}

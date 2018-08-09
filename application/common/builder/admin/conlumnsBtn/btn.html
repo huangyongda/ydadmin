@@ -1,0 +1,15 @@
+{php}   if(!isset($BtnUrl)){ $BtnUrl=""; }   {/php}
+
+<a href="javascript:;" class="{$style} layui-btn layui-btn-mini pj_btn"
+   data-url="{:urldecode($BtnUrl)}"
+   data-BtnName="{$BtnName}"
+   data-OpenType="{$OpenType}"
+
+   {notempty name="confirm.text"}
+   data-confirm-text="{$confirm.text}" data-confirm-ico="{$confirm.ico}"
+   {/notempty}
+
+   ><i class="fa {notempty name='icoName'} {$icoName} {/notempty}"> </i>  {$BtnName}
+</a>
+
+

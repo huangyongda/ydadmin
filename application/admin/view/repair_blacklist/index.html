@@ -1,0 +1,60 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+{block name="top_content"}
+
+{// newBadRecord 显示统计}
+
+{/block}
+{block name="foot"}
+<script>
+    var $count = '{$dataSourceUrl}';
+    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['element'], function() {
+        var $ = layui.jquery;
+        var element = layui.element();
+        element.on('tab(test1)', function () {
+            var url = this.getAttribute('lay-url');
+        });
+    })
+</script>
+{/block}
+
+{// newBadRecord 显示统计}
+
+
+
+{block name="page_ajax_success_af"}
+{// 异步提交成功之后 <script> // }
+
+// 获取当前页数据，组成新数组
+var dataList = result.list;
+var data = [];
+$.each(dataList,function(k,v){
+    temp = {};
+    temp['user_status'] = v.user_status;
+    data[v.id] = temp;
+});
+
+// 获取列表行，进行相关操作
+var $tr = $('#content').children('tr');
+$tr.each(function(item){
+    var $this = $(this);
+    // 获取当前行数据id
+    var $id = $this.children('td:eq(0)').html();
+    var userStatus = data[$id]['user_status'];
+    var $lastTd = $this.children('td:last');
+    if(userStatus == 3) {
+        $this.attr('style','background: #ffe7df;');
+        $lastTd.children('a:first').remove();
+    } else {
+        $lastTd.children('a:last').remove();
+    }
+});
+console.log($tr);
+
+
+
+
+//{// 异步提交成功之后 </script> }
+{/block}

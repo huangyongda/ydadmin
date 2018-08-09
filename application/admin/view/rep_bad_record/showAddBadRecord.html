@@ -1,0 +1,70 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+{block name="page_ajax_success_af"}
+
+{/block}
+
+
+
+{// 异步提交成功之后 }
+{block name="submit_ajax_success_af"}
+
+layer.msg('api请求成功', {icon: 1});
+
+layer.confirm(data.msg, {
+icon: 1,
+btn: [] //按钮
+});
+
+{/block}
+
+{block name="foot"}
+<script>
+    layui.use(['form'], function() {
+        var $ = layui.jquery;
+        var $reset = $('button:reset');
+        // 获取师傅信息URL
+        var getRepInfoUrl = '{:url("RepBadRecord/getRepInfoApplicableToBad")}';
+        // 修改reset按钮自身内容
+        $reset.html('检测账号');
+        // 获取师傅相关信息
+        $reset.click(function(){
+            var account = $('input:text[name="account"]').val();
+            if(account.length <=0) {
+                layer.msg('请输入账号', {icon: 5});
+                return false;
+            }
+
+            $.ajax({
+                url:getRepInfoUrl,
+                data:{account:account},
+                type:'post',
+                dataType:'json',
+                success:function(data){
+                    if(data.rel) {
+                        var html = '用户账号：'+ data.list.account + "<br>";
+                        html += '用户昵称：' + data.list.realname+'<br>';
+                        html += '前科：' + data.list.recordTotal+'<br>';
+                        html += '<hr>';
+                        html += '隶属于：<br/>';
+                        html += '用户账号：' + data.list.p_account+'<br>';
+                        html += '用户昵称：' + data.list.p_realname+'<br>';
+                        layer.open({
+                            title: '在线调试'
+                            ,content: html,
+                            area: ['300px', '300px']
+                        });
+
+                    } else {
+                        layer.msg(data.msg, {icon: 5});
+                    }
+                }
+            });
+            return false;
+        });
+
+
+    });
+</script>
+{/block}

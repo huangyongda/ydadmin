@@ -1,0 +1,52 @@
+<div class="layui-header header header-demo">
+    <div class="layui-main">
+        <div class="admin-login-box">
+            <a class="logo" style="left: 0;" href="javascript:;">
+                <span style="font-size: 22px;">后台管理</span>
+            </a>
+            <div class="admin-side-toggle">
+                <i class="fa fa-bars" aria-hidden="true"></i>
+            </div>
+            <div class="admin-side-full">
+                <i class="fa fa-life-bouy" aria-hidden="true"></i>
+            </div>
+        </div>
+        <ul class="layui-nav admin-header-item">
+            <?php foreach($top_menu_list as $top_menu){ ?>
+            <li class="layui-nav-item  <?php   if($cur_menu_id==$top_menu['menu_id']){  ?>  layui-this <?php  } ?> "
+            >
+                <a href="<?php echo $top_menu['href']; ?>"><?php echo $top_menu['title']; ?></a>
+            </li>
+            <?php } ?>
+            <!--<li class="layui-nav-item " id="end">-->
+                <!--<a href="#">下载</a>-->
+            <!--</li>-->
+            <li class="layui-nav-item user_img">
+                <a href="javascript:;" class="admin-header-user">
+                    <img src="__STATIC__/layui/images/0.jpg" />
+                    <span class="text">
+                        <b class="role" style="color:#01AAED;font-size: 12px;">{$userInfo.role_name} </b>
+                        <b class="account" style="font-size: 12px;">{$userInfo.account} </b>
+
+                    </span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a href="javascript:;"><i class="fa fa-user-circle" aria-hidden="true"></i> 个人信息</a>
+                    </dd>
+                    <dd>
+                        <a href="javascript:;"><i class="fa fa-gear" aria-hidden="true"></i> 设置</a>
+                    </dd>
+                    <dd>
+                        <a href="{:url('admin/login/signOut')}"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+        <ul class="layui-nav admin-header-item-mobile">
+            <li class="layui-nav-item">
+                <a href="{:url('admin/login/signOut')}"><i class="fa fa-sign-out" aria-hidden="true"></i> 注销</a>
+            </li>
+        </ul>
+    </div>
+</div>

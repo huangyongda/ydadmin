@@ -1,0 +1,35 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+
+{// 页面异步提交成功之后 }
+{block name="page_ajax_success_af"}
+var change = $('input:radio[name="type"]:checked').val()
+console.log(change);
+if(change=="1"){
+    $(".admin-table tr th").each(function(){
+        if($(this).text()==="留言人" || $(this).text()==="留言角色"){
+            $(this).hide();
+        }
+    });
+
+    $("#content tr td").each(function(){
+        if($(this).text()==="undefined"){
+            $(this).hide();
+        }
+    });
+}
+if(change=="2"){
+    $(".admin-table tr th").show();
+    <!--$(".admin-table tr th").each(function(){-->
+        <!--if($(this).text()==="操作"){-->
+            <!--$(this).hide();-->
+        <!--}-->
+    <!--});-->
+    $("#content tr td").each(function(){
+        $(this).parents("tr").find("a[data-btnname='删除留言']").remove();
+    });
+}
+
+
+{/block}

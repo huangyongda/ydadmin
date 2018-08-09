@@ -1,0 +1,70 @@
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">授权区域及品类
+            {if condition="isset($pageType) && $pageType == 0"}
+                <button class="layui-btn layui-btn-primary layui-btn-mini editInfo"
+                        request-url="{:url('addRepAreaAuth',['uid'=>$userInfo['baseInfo']['id']])}"
+                        title="地区添加">
+                    <i class="layui-icon"></i>
+                </button>
+            {/if}
+        </h3>
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th style="text-align: center;">ID</th>
+                <th style="text-align: center;">地址</th>
+                <th style="text-align: center;width:10%">品类</th>
+                <th style="text-align: center;">是否有品类授权</th>
+                <th style="text-align: center;width:18%">开始时间</th>
+                <th style="text-align: center;width:18%">结束时间</th>
+                <th style="text-align: center;width:13%">取消优先操作</th>
+                <th style="text-align: center;width:13%">操作</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="$userInfo['authAreaAndKind']" id="vo"}
+            <tr>
+                <td style="text-align: center;" >{$vo.id}</td>
+                <td style="text-align: center;">{$vo.address}</td>
+                <td style="text-align: center;" >
+                    <a href="javascript:;" class="lookPage"
+                       request-url="{:url('getAuthKind',['authId'=>$vo['id']])}"
+                       title="已授权的品类(师傅能否接单取决于此二级品类是否被授权)">查看品类</a>
+                </td>
+                <td style="text-align: center;" >{$vo.isAuthKind}</td>
+                <td style="text-align: center;" >{$vo.startTime}</td>
+                <td style="text-align: center;" >{$vo.endTime}</td>
+                <td style="text-align: center;" >
+                    <a href="javascript:;" class="editInfo"
+                       request-url="{:url('cancelPriorityGetOrder',[
+                                                                    'uid'=>$userInfo['baseInfo']['id'],
+                                                                    'authId'=>$vo['id'],
+                                                                    ])}"
+                       title="取消优先操作" location-reload="false"
+                            >取消优先操作</a>
+                </td>
+                <td style="text-align: center;" >
+                    <button class="layui-btn layui-btn-mini  layui-btn-danger editInfo"
+                            request-url="{:url('editAreaAuthKinds',[
+                                                                    'uid'=>$userInfo['baseInfo']['id'],
+                                                                    'authId'=>$vo['id']
+                                                                    ])}"
+                            pid="{$vo.id}" location-reload="false">
+                        修改
+                    </button>
+                    <button class="layui-btn layui-btn-mini layui-btn-danger delete"
+                            request-url="{:url('delAuthArea')}"
+                            pid="{$vo.id}">
+                        删除
+                    </button>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+
+    </div>
+</li>

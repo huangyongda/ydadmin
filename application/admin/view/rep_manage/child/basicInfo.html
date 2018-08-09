@@ -1,0 +1,80 @@
+<!-- 基本资料 -->
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">基本资料
+                {if condition="isset($pageType) && $pageType == 0"}
+                    <button class="layui-btn layui-btn-primary layui-btn-mini editInfo"
+                            request-url="{:url('editBasicInfo',['uid'=>$userInfo['baseInfo']['id']])}"
+                            title="修改">
+                        <i class="layui-icon"></i>
+                    </button>
+                {/if}
+        </h3>
+        <div class="layui-field-box">
+            <table class="layui-table">
+                <tbody>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">店面：</td>
+                    <td style="text-align: center;">{$userInfo.otherInfo.company}</td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">类型：</td>
+                    <td style="text-align: center;">{$userInfo.otherInfo.repIdentity}</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray">证件类型：</td>
+                    <td style="text-align: center;">身份证</td>
+                    <td style="text-align: center;" class="layui-bg-gray">证件号：</td>
+                    <td style="text-align: center;">{$userInfo.otherInfo.id_number}</td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray">店铺地址：</td>
+                    <td style="text-align: center;">{$userInfo.baseInfo.fullAddress}</td>
+                    <td style="text-align: center;" class="layui-bg-gray">负责人姓名：</td>
+                    <td style="text-align: center;">{$userInfo.baseInfo.realname}</td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray">联系手机：</td>
+                    <td style="text-align: center;">{$userInfo.otherInfo.phone}</td>
+
+                    {if condition="$userInfo['baseInfo']['role_id'] == 12 &&
+                    $userInfo['otherInfo']['check_status'] == 2 &&
+                    ($userInfo['otherInfo']['account_type'] == 1 || $userInfo['otherInfo']['account_type'] == 0)
+                    "}
+                    <td style="text-align: center;" class="layui-bg-gray">线下保证金：</td>
+                    <td style="text-align: center;">{$userInfo.otherInfo.rep_bond_money}</td>
+                    {else /}
+                    <td style="text-align: center;" class="layui-bg-gray">座机号：</td>
+                    <td style="text-align: center;">{$userInfo.baseInfo.tel}</td>
+                    {/if}
+
+                </tr>
+
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray">信息员姓名：</td>
+                    <td style="text-align: center;">{$userInfo.otherInfo.messenger}</td>
+                    <td style="text-align: center;" class="layui-bg-gray">信息员电话：</td>
+                    <td style="text-align: center;">{$userInfo.otherInfo.phone}</td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray">账号：</td>
+                    <td style="text-align: center;">{$userInfo.baseInfo.account}</td>
+                    <td style="text-align: center;" class="layui-bg-gray">电子邮箱：</td>
+                    <td style="text-align: center;">{$userInfo.otherInfo.email}</td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray">缴纳线上保证金最低配置值：</td>
+                    <td style="text-align: center;">{$userInfo.baseInfo.miniBondMoney}</td>
+                    <td style="text-align: center;" class="layui-bg-gray">已缴纳线上保证金：</td>
+                    <td style="text-align: center;">{$userInfo.baseInfo.bond_money}</td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</li>

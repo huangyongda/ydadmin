@@ -1,0 +1,42 @@
+
+<script type="text/javascript" src="__STATIC__/layui/plugins/layui/layui.js"></script>
+<script>
+    layui.use(['layer', 'form'], function() {
+        var layer = layui.layer,
+                $ = layui.jquery,
+                form = layui.form();
+
+        form.on('submit(login)',function(data){
+            var loginUrl = data.elem.baseURI;
+            var account = data.field.account;
+            var passwd = data.field.password;
+            var captcha = data.field.captcha;
+
+            $.ajax({
+                url:loginUrl,
+                data:{account:account,passwd:passwd,captcha:captcha},
+                dataType:'json',
+                type:'post',
+                success:function(retData){
+                    if(retData.rel) {
+                        window.location.href = '{:url("admin/index/index")}'
+                    } else {
+                        layer.msg(retData.msg, {icon: 2});
+                        $('.captcha img').click();
+                    }
+                }
+            });
+            return false;
+        });
+
+        /* 验证码刷新 */
+        $('.captcha img').click(function(){
+            var $this = $(this);
+            var $src = $this.attr('src');
+            $this.attr('src',$src+'?'+Math.random());
+        })
+    });
+</script>
+</body>
+
+</html>

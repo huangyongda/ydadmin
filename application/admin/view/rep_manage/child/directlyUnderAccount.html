@@ -1,0 +1,27 @@
+<!-- 直属账号 -->
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">直属账号</h3>
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th style="text-align: center;">姓名</th>
+                <th style="text-align: center;">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="$userInfo['childAccount']['directlyUnder']" id="vo"}
+            <tr>
+                <td style="text-align: center;" >
+                    {$vo.realname}
+                </td>
+                <td style="text-align: center;">
+                    <a href="{:url('detail',['uid'=>$vo['uid']])}" target="_blank">查看详情</a>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+    </div>
+</li>

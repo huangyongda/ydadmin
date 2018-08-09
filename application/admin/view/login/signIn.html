@@ -1,0 +1,61 @@
+{include file="static/admin/login_top.html" /}
+<style>
+	.captcha img,.layui-input{
+		display:inline-block;
+	}
+	.captcha img {
+		cursor:pointer;
+	}
+	.captcha .layui-input{
+		max-width: 105px;
+		padding:10px!important;
+	}
+
+
+</style>
+<body class="beg-login-bg">
+<script>
+	//登录判断
+	if(parent.tab){
+        parent.location.href="{:url('login/signIn')}";
+    }
+</script>
+<div class="beg-login-box">
+	<header>
+		<h1>后台登录</h1>
+	</header>
+	<div class="beg-login-main">
+		<form action="{:url('signIn')}" class="layui-form" method="post"><input name="__RequestVerificationToken" type="hidden" value="fkfh8D89BFqTdrE2iiSdG_L781RSRtdWOH411poVUWhxzA5MzI8es07g6KPYQh9Log-xf84pIR2RIAEkOokZL3Ee3UKmX0Jc8bW8jOdhqo81" />
+			<div class="layui-form-item">
+				<label class="beg-login-icon">
+					<i class="layui-icon">&#xe612;</i>
+				</label>
+				<input type="text" name="account" lay-verify="account" autocomplete="off" placeholder="这里输入登录名" class="layui-input">
+			</div>
+			<div class="layui-form-item">
+				<label class="beg-login-icon">
+					<i class="layui-icon">&#xe642;</i>
+				</label>
+				<input type="password" name="password" lay-verify="password" autocomplete="off" placeholder="这里输入密码" class="layui-input">
+			</div>
+			<div class="layui-form-item captcha">
+				<div class="layui-form-item">
+					<input type="text" name="captcha"  placeholder="请输入验证码" class="layui-input" maxlength="4" >
+					<img src="{:url('captcha')}" alt="验证码">
+				</div>
+				
+
+				<div class="beg-pull-right">
+					<button class="layui-btn layui-btn-primary" lay-submit lay-filter="login">
+						<i class="layui-icon">&#xe650;</i> 登录
+					</button>
+				</div>
+				<div class="beg-clear"></div>
+			</div>
+		</form>
+	</div>
+	<footer>
+		<p>Beginner © www.cug2313.com</p>
+	</footer>
+</div>
+{include file="static/admin/login_foot.html" /}

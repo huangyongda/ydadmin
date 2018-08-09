@@ -1,0 +1,130 @@
+<div class="layui-timeline-content ">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>客诉信息</legend>
+    </fieldset>
+    <form class="layui-form layui-form-pane layui-form-editComplaintInfo" action="">
+        <!--工单ID-->
+        <input type="hidden" name="id" value="{$info.id}" >
+        <!--负责人-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">负责人</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="fault[]" value="fault_r" title="维修商" {eq name="$info.fault_r" value="1"}checked {/eq}>
+                <input type="checkbox" name="fault[]" value="fault_f" title="厂商"  {eq name="$info.fault_f" value="1"}checked{/eq}>
+                <input type="checkbox" name="fault[]" value="fault_cug" title="客服" {eq name="$info.fault_cug" value="1"}checked{/eq}>
+                <input type="checkbox" name="fault[]" value="fault_c" title="消费者"  {eq name="$info.fault_c" value="1"}checked{/eq}>
+            </div>
+        </div>
+        <!--投诉类型-->
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">投诉类型</label>
+            {volist name="reason" id="vo"}
+            <div class="layui-input-block " >
+                <input type="radio" name="reason_pid"  lay-filter="reason"   lay-data="{$vo.pid}" value="{$vo.reason}" title="{$vo.reason}" {if condition="$vo['pid'] eq $info['reason_pid']"}checked{/if}>
+                {volist name="vo.content" id="con"}
+                <div class="layui-input-block  reason reason_{$vo.pid}"  {if condition="$vo['pid'] eq $info['reason_pid']"}{else/}style="display: none"{/if}  >
+                <input type="radio" name="reason_id" value="{$con.id}" title="{$con.content}"  {if condition="$con['id'] eq $info['reason_id']"}checked{/if}>
+                </div>
+                {/volist}
+            </div>
+            {/volist}
+        </div>
+        <!--赔付类型-->
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">赔付类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_first_pay" value="2" title="先赔付客诉" {eq name="$info.is_first_pay" value="2"}checked{/eq}>
+                <input type="radio" name="is_first_pay" value="1" title="常规客诉" {eq name="$info.is_first_pay" value="1"}checked{/eq}>
+            </div>
+        </div>
+        <!--厂商金额操作-->
+        <div class="layui-form-item">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th style="text-align: center;">操作类型</th>
+                    <th style="text-align: center;">对象</th>
+                    <th style="text-align: center;">可用余额</th>
+                    <th style="text-align: center;">金额</th>
+                    <th style="text-align: center;">理由</th>
+                    <th style="text-align: center;">状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                <td style="text-align: center;">
+                    <input type="radio" name="positive_fac" value="2" title="加钱" {if condition="$info['money_fid'] gt 0 "}checked   {/if} {if condition="$info['money_fid'] neq 0"}disabled{/if}>
+                    <input type="radio" name="positive_fac" value="1" title="减钱" {if condition="$info['money_fid'] lt 0 "}checked  {/if} {if condition="$info['money_fid'] neq 0"}disabled{/if}>
+                </td>
+                <td style="text-align: center;">厂家</td>
+                <td style="text-align: center;">{$info.fac_fee}</td>
+                <td style="text-align: center;"><input type="text" name="money_fid" lay-verify="title"  autocomplete="off"  value="{$info.money_fid}"  {if condition="$info['money_fid'] neq 0"}disabled{/if} placeholder="请输入金额" class="layui-input"></td>
+                <td style="text-align: center;"> <textarea placeholder="请输入理由"  name="money_fid_reason"  {if condition="$info['money_fid'] neq 0  or $info['status'] neq 2"}disabled{/if} class="layui-textarea">{$info.money_fid_reason}</textarea></td>
+                <td style="text-align: center;">{$info['money_fid_caiwu']}</td>
+                </tbody>
+            </table>
+        </div>
+        <!--维修商金额操作-->
+        <div class="layui-form-item">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th style="text-align: center;">操作类型</th>
+                    <th style="text-align: center;">对象</th>
+                    <th style="text-align: center;">可用余额</th>
+                    <th style="text-align: center;">金额</th>
+                    <th style="text-align: center;">理由</th>
+                    <th style="text-align: center;">状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                <td style="text-align: center;">
+                    <input type="radio" name="positive_rep" value="2" title="加钱" {if condition="$info['money_rid'] gt 0 "}checked   {/if} {if condition="$info['money_rid'] neq 0"}disabled{/if}>
+                    <input type="radio" name="positive_rep" value="1" title="减钱" {if condition="$info['money_rid'] lt 0 "}checked   {/if} {if condition="$info['money_rid'] neq 0"}disabled{/if}>
+                </td>
+                <td style="text-align: center;">维修商</td>
+                <td style="text-align: center;">{$info.rep_fee}</td>
+                <td style="text-align: center;"><input type="text" name="money_rid" lay-verify="title" value="{$info.money_rid}"  {if condition="$info['money_rid'] neq 0"}disabled{/if}  autocomplete="off" placeholder="请输入金额" class="layui-input"></td>
+                <td style="text-align: center;"> <textarea placeholder="请输入理由" name="money_rid_reason"  {if condition="$info['money_rid'] neq 0  or $info['status'] neq 2 "}disabled{/if} class="layui-textarea">{$info.money_rid_reason}</textarea></td>
+                <td style="text-align: center;">{$info['money_rid_caiwu']}</td>
+                </tbody>
+            </table>
+        </div>
+        <!--消费者金额操作-->
+        <div class="layui-form-item">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th style="text-align: center;">操作类型</th>
+                    <th style="text-align: center;">对象</th>
+                    <th style="text-align: center;">金额</th>
+                    <th style="text-align: center;">开户名</th>
+                    <th style="text-align: center;">开户行</th>
+                    <th style="text-align: center;">卡号</th>
+                    <th style="text-align: center;">理由</th>
+                    <th style="text-align: center;">状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                <td style="text-align: center;">加钱</td>
+                <td style="text-align: center;">消费者</td>
+                <td style="text-align: center;"><input type="text" name="money_c" value="{$info.money_c}" {if condition="$info['money_c'] neq 0 "}disabled{/if} lay-verify="title" autocomplete="off" placeholder="请输入金额" class="layui-input"></td>
+                <td style="text-align: center;"><input type="text" name="bankuser" lay-verify="title" autocomplete="off" placeholder="请输入开户名" class="layui-input" value="{$info.c_kaihuren}" {if condition="$info['money_c'] neq 0"}disabled{/if}></td>
+                <td style="text-align: center;"><input type="text" name="openingbank" lay-verify="title" autocomplete="off" placeholder="请输入开户行" class="layui-input" value="{$info.c_kaihuhang}" {if condition="$info['money_c'] neq 0 "}disabled{/if}></td>
+                <td style="text-align: center;"><input type="text" name="banknumber" lay-verify="title" autocomplete="off" placeholder="请输入卡号" class="layui-input" value="{$info.c_kaihukahao}" {if condition="$info['money_c'] neq 0 "}disabled{/if}></td>
+                <td style="text-align: center;"> <textarea placeholder="请输入理由" name="money_c_reason" class="layui-textarea" {if condition="$info['money_c'] neq 0  or $info['status'] neq 2 "}disabled{/if}>{$info['money_c_reason']}</textarea></td>
+                <td style="text-align: center;">{$info['money_c_caiwu']}</td>
+                </tbody>
+            </table>
+        </div>
+        <!--处理结果-->
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">处理结果</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="effect" class="layui-textarea"  {if condition="$info['status'] neq 2 "}disabled{/if}>{$info.effect}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit=""  lay-class="layui-form-editComplaintInfo"  lay-url="{:url('editComplaintInfo')}" lay-filter="message" {if condition="$info['status'] neq 2"}style="display:none"{/if}>提交</button>
+        </div>
+    </form>
+</div>

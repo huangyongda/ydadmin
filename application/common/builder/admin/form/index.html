@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>{$title}</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="__TPL__/plugins/layui/css/layui-v1.0.9.css?v=1" media="all" />
+    <link rel="stylesheet" href="__TPL__/plugins/font-awesome/css/font-awesome.min.css">
+    {block name="head"}
+    {/block}
+</head>
+
+<body>
+<div style="margin: 15px;">
+    {block name="header"}
+    {/block}
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>{$title}</legend>
+    </fieldset>
+    {notempty name='remark'}
+    <blockquote class="layui-elem-quote layui-quote-nm">
+        {$remark}
+    </blockquote>
+    {/notempty}
+    {block name="top_content"}
+    {/block}
+    <form class="layui-form" action="{$submitUrl}">
+
+        {foreach $formData as $formkey=>$dataItem}
+        {switch name="$dataItem[2]"}
+
+        {case value="date_day"}
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$dataItem[1]}</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input"
+                       id="{$dataItem[0]}"
+                       {if condition=" !isset($dataItem['readonly'])  "}  name="{$dataItem[0]}"  {/if}
+                       {if condition=" isset($dataItem['readonly'])  "}  readonly disabled="disabled"  {/if}
+                       lay-verify="date" placeholder="{$dataItem[0]}" autocomplete=""
+                       value="{$dataItem[3]}"
+                       class="layui-input" onclick="layui.laydate({elem: this, format: 'YYYY-MM-DD',istime: false})">
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[4]}</div>
+        </div>
+        {/case}
+
+        {case value="date_second"}
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$dataItem[1]}</label>
+            <div class="layui-input-inline">
+                <input type="text" class="layui-input"
+                       {if condition=" !isset($dataItem['readonly'])  "}  name="{$dataItem[0]}"  {/if}
+                       {if condition=" isset($dataItem['readonly'])  "}  readonly disabled="disabled"  {/if}
+                       id="{$dataItem[0]}"
+                       placeholder="{$dataItem[0]}" autocomplete=""
+                       value="{$dataItem[3]}"
+                       class="layui-input" onclick="layui.laydate({elem: this, format: 'YYYY-MM-DD hh:mm:ss',istime: true})">
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[4]}</div>
+        </div>
+        {/case}
+
+        {case value="checkbox_tree"}
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$dataItem[1]}</label>
+            <div class="layui-input-block">
+                <div id="{$dataItem[0]}"></div>
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[5]}</div>
+        </div>
+        {/case}
+
+
+        {case value="checkbox"}
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$dataItem[1]}</label>
+            <div class="layui-input-block">
+                {foreach $dataItem[3] as $key=>$val }
+                <input type="checkbox"
+                       {if condition=" !isset($dataItem['readonly'])  "}  name="{$dataItem[0]}[]"  {/if}
+                       {if condition=" isset($dataItem['readonly'])  "}  readonly disabled="disabled"  {/if}
+                       {if condition="$val eq $dataItem[4]"} checked="" {/if}
+                       {in name="$val" value="$dataItem[4]"} checked="" {/in}
+                value="{$val}" title="{$key}">
+                {/foreach}
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[5]}</div>
+        </div>
+        {/case}
+
+        {case value="checkbox_origin"}
+
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">{$dataItem[1]}</label>
+            <div class="layui-input-block">
+                {foreach $dataItem[3] as $key=>$val }
+                <input type="checkbox" lay-skin="primary"
+                       {if condition=" !isset($dataItem['readonly'])  "}  name="{$dataItem[0]}[]"  {/if}
+                       {if condition=" isset($dataItem['readonly'])  "}  readonly disabled="disabled"  {/if}
+                       {if condition="$val eq $dataItem[4]"} checked="" {/if}
+                {in name="$val" value="$dataItem[4]"} checked="" {/in}
+                value="{$val}" title="{$key}">
+                {/foreach}
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[5]}</div>
+        </div>
+
+        {/case}
+
+        {case value="select"}
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$dataItem[1]}</label>
+            <div class="layui-input-inline">
+                <select  lay-filter="{$dataItem[0]}"
+                         {if condition=" !isset($dataItem['readonly'])  "}  name="{$dataItem[0]}"  {/if}
+                >
+                    {foreach $dataItem[3] as $key=>$val }
+                    <option value="{$val}"
+                            {if condition=" isset($dataItem['readonly'])  "}  readonly disabled="disabled"  {/if}
+                            {if condition="$val eq $dataItem[4]"} selected="" {/if}
+                            {if condition=" isset($dataItem['noReadonly'])
+                            and !in_array($val,$dataItem['noReadonly'])"}
+                            readonly disabled="disabled"
+                            {/if}
+                    >{$key}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[5]}</div>
+
+        </div>
+        {/case}
+
+        {//联动选择}
+        {case value="select_group"}
+            <div class="layui-form-item select_group{$dataItem[0]}">
+                <label class="layui-form-label">{$dataItem[1]}</label>
+                {php} $i=0;{/php}
+                {foreach $dataItem[3]["list"] as $defval=>$selectItem }
+                        {php} $i++;{/php}
+
+                        {if condition="$i elt $dataItem[3]['max_level'] "}{// 最大等级}
+                        <div class="layui-input-inline">
+                            <select  {if condition=" !isset($dataItem['readonly'])  "}  name="{$dataItem[0]}"  {/if}
+                                    lay-filter="{$dataItem[0]}">
+                                {foreach $selectItem as $key=>$val }
+                                <option  {if condition=" isset($dataItem['readonly'])  "}   readonly disabled="disabled" {/if}
+                                        value="{$val}" {if condition="$val eq $defval"} selected=""  {/if}
+                                >{$key}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                        {/if}
+                {/foreach}
+                <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[4]}</div>
+            </div>
+        {/case}
+
+        {case value="image"}
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$dataItem[1]}</label>
+            <div class="layui-input-block">
+                <div class="image">
+                    <div class="image_box" id="image_box_{$dataItem[0]}">
+                        {foreach $dataItem[3]['default'] as $key=>$val }
+                        <div class="imgItem layui-input-inline">
+                            <input type="hidden" name="{$dataItem[0]}[]" value="{$key}">
+                            <img id="{$dataItem[0]}_upload_img"
+                                 style="max-height: {$dataItem[3]['max-height']};max-width: {$dataItem[3]['max-width']}"
+                                 src="{$val}">
+                            <a class="layui-btn-mini layui-btn layui-btn-normal delete_btn" href="javascript:;"><i class="layui-icon"></i>删除</a>
+                        </div>
+                        {/foreach}
+                    </div>
+
+
+                    <div class="site-demo-upbar">
+                        <input type="file" name="uploadImage" class="layui-upload-file" id="{$dataItem[0]}">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[4]}</div>
+
+        </div>
+        {/case}
+
+        {case value="radio"}
+        <div class="layui-form-item"
+             {if condition=" isset($dataItem['readonly'])  "}   lay-filter="readonlyInput" {/if}
+             >
+            <label class="layui-form-label">{$dataItem[1]}</label>
+            <div class="layui-input-block" {if condition=" isset($dataItem['readonly'])  "}   readonly disabled="disabled" {/if} >
+                {foreach $dataItem[3] as $key=>$val }
+                <input type="radio"   value="{$val}" name="{$dataItem[0]}"
+                       
+                       {if condition=" isset($dataItem['readonly'])  "}   readonly disabled="disabled" {/if}
+                       {if condition="$val eq $dataItem[4]"} checked="" {/if}
+                title="{$key}" >
+                {/foreach}
+
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[5]}</div>
+        </div>
+        {/case}
+
+        {case value="textarea_origin"}
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$dataItem[1]}</label>
+            <div class="layui-input-block" >
+                <textarea placeholder="请输入内容" class="layui-textarea"
+                          {if condition=" !isset($dataItem['readonly'])  "}  name="{$dataItem[0]}"  {/if}
+                          {if condition=" isset($dataItem['readonly'])  "} readonly disabled="disabled"  {/if}
+                >{$dataItem[3]}</textarea>
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[4]}</div>
+        </div>
+        {/case}
+
+        {case value="textarea"}
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">{$dataItem[1]}</label>
+            <div class="layui-input-block">
+                {if condition=" !isset($dataItem['readonly'])  "}
+                <textarea class="layui-textarea layui-hide"  name="{$dataItem[0]}" id="LAY_demo_editor_{$formkey}"
+                          lay-verify="content{$formkey}">{$dataItem[3]}</textarea>
+                {/if}
+                {if condition=" isset($dataItem['readonly'])  "}{$dataItem[3]}{/if}
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[4]}</div>
+        </div>
+        {/case}
+
+        {case value="hidden"}
+        <input type="hidden" name="{$dataItem[0]}" value="{$dataItem[3]}">
+        {/case}
+
+        {case value="password"}
+        <div class="layui-form-item">
+            <div class="layui-form-item">
+                <label class="layui-form-label">{$dataItem[1]}</label>
+                <div class="layui-input-inline">
+                    <input type="password" autocomplete=""
+                           {if condition=" !isset($dataItem['readonly'])  "}  name="{$dataItem[0]}"  {/if}
+                    {if condition=" isset($dataItem['readonly'])  "} readonly disabled="disabled" {/if}
+                    value="{$dataItem[3]}"  class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[4]}</div>
+            </div>
+        </div>
+        {/case}
+
+        {case value="text" break="0"}
+        <div class="layui-form-item">
+            <div class="layui-form-item">
+                <label class="layui-form-label">{$dataItem[1]}</label>
+                <div class="layui-input-inline">
+                    <input type="text" autocomplete=""
+                           {if condition=" !isset($dataItem['readonly'])  "}  name="{$dataItem[0]}"  {/if}
+                           {if condition=" isset($dataItem['readonly'])  "} readonly disabled="disabled" {/if}
+                           value="{$dataItem[3]}"  class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux remark_{$dataItem[0]}">{$dataItem[4]}</div>
+            </div>
+        </div>
+        {/case}
+        {default /}
+
+        {/switch}
+
+        {/foreach}
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+
+        <div id="layui-xtree-demo1"></div>
+
+    </form>
+
+</div>
+<script type="text/javascript" src="__TPL__/plugins/layui/layui.js"></script>
+<script src="__TPL__/js/layui-xtree.js"></script>
+<script>
+
+    layui.use(['form', 'layedit', 'laydate','upload'], function() {
+        var form = layui.form(),
+            layer = layui.layer,
+            laydate = layui.laydate;
+
+        var $ = layui.jquery;
+
+
+
+
+
+
+        {foreach $formData as $formkey=>$dataItem}
+            {switch name="$dataItem[2]"}
+                {case value="select_group"}
+                    form.on('select({$dataItem[0]})', function(data){
+                        var index=$(this).parents(".layui-input-inline").index(".select_group{$dataItem[0]}  .layui-input-inline");
+                        $(".select_group{$dataItem[0]}  .layui-input-inline:gt("+index+")").remove();
+                        var maxSelectLevel="{$dataItem[3]['max_level']}";
+                        if($(".select_group{$dataItem[0]}  .layui-input-inline").length >=maxSelectLevel ){
+                            return true;
+                        }
+                        $.ajax({
+                            url:"{$dataItem[3]['data_url']}",
+                            dataType:"json",
+                            data:{id:data.value},
+                            type:"post",
+                            success:function(data){
+
+                                if(!data.rel && data.msg){
+                                    layer.msg(data.msg, {icon: 2});
+                                    return false;
+                                }
+                                if(data.list.length<=0){
+                                    return true;
+                                }
+                                var op_html_str="<div class=\"layui-input-inline\"><select name=\"{$dataItem[0]}\" lay-filter=\"{$dataItem[0]}\"><option value=\"\">请选择</option> ";
+
+                                $.each(data.list,function (key,val) {
+                                    op_html_str+="<option value=\""+val.id+"\">"+val.title+"</option>";
+                                });
+                                op_html_str+="</select></div>";
+                                $('.select_group{$dataItem[0]}  .layui-input-inline').last().after(op_html_str);
+                                layui.form().render('select');//重新渲染
+                            }
+                        });
+                    });
+                {/case}
+                {case value="checkbox_tree"}
+                    //创建tree
+                    var xtree_{$dataItem[0]} =
+                        new layuiXtree({
+                        elem: '{$dataItem[0]}' //放xtree的容器（必填）
+                        , form: form              //layui form对象 （必填）
+                        , data: eval('({:json_encode($dataItem[3]) })') //数据，结构请参照下面 （必填）
+
+                        , color: "#000"           //图标颜色 （选填）
+                        //{if condition=" isset($dataItem['readonly'])  "}
+
+                        , readonly: "1" //只读
+                        //{/if}
+
+                        //{if condition=" isset($dataItem['isopen'])  "}
+
+                        , isopen: true            //初次加载时全部展开，默认true （选填）
+                        //{/if}
+
+                        , selected: eval('({:json_encode($dataItem[4]) })')           //图标颜色 （选填）
+                        , icon: {                 //图标样式 （选填）
+                            open:    '<i class="fa   fa-toggle-down" aria-hidden="true"></i>',//节点打开的图标
+                            close: '<i class="fa   fa-toggle-left" aria-hidden="true"></i>', //节点关闭的图标
+                            end: '<i class="fa fa-sticky-note-o" aria-hidden="true"></i>'     //末尾节点的图标
+                        }
+                    });
+                {/case}
+                {case value="textarea"}
+                    var layedit{$formkey} = layui.layedit;
+                        layedit{$formkey}.set({
+                        uploadImage: {
+                            url: '{$uploadImgUrl}' //接口url
+                            ,type: 'post' //默认post
+                        }
+                    });
+                    //创建一个编辑器
+                    var editIndex{$formkey} = layedit{$formkey}.build('LAY_demo_editor_{$formkey}');
+                {/case}
+                {case value="image"}
+                        layui.upload({
+                            url: '{$uploadImgUrl}'
+                            ,elem: '#{$dataItem[0]}' //指定原始元素，默认直接查找class="layui-upload-file"
+                            ,method: 'post' //上传接口的http类型
+                            ,multiple: true
+                            ,before: function(input){
+                                //返回的参数item，即为当前的input DOM对象
+
+                                //console.log('文件上传中');
+                            }
+                            ,success: function(res){
+                                console.log(res);
+                                if($("#image_box_{$dataItem[0]} .imgItem").length >="{$dataItem[3]['max-upload-num']}"){
+                                    //alert();
+                                    layer.alert("最大上传数量【{$dataItem[3]['max-upload-num']}】限制");
+                                    return false;
+                                }
+                                var tpl_str='<div class="imgItem layui-form-item"><input type="hidden" name="{$dataItem[0]}['+res.data.id+']" value="'+res.data.id+'"> <img class="{$dataItem[0]}_upload_img uploadimg_id'+res.data.id+'" style="max-height: {$dataItem[3][\'max-height\']};max-width: {$dataItem[3][\'max-width\']}" src="'+res.data.src+'">  <a class="layui-btn-mini layui-btn delete_btn_'+res.data.id+' layui-btn-normal" href="javascript:;"><i class="layui-icon"></i>删除</a>  </div>';
+                                $("#image_box_{$dataItem[0]}").append(tpl_str);
+                                $("#image_box_{$dataItem[0]} .imgItem .delete_btn_"+res.data.id).on('click', function () {
+                                    $(this).parent(".imgItem").remove();
+                                });
+                                $("#image_box_{$dataItem[0]} .imgItem .uploadimg_id"+res.data.id).on('click', function () {
+                                    layer.open({
+                                        type: 1,
+                                        title: false,
+                                        closeBtn: 0,
+                                        area: '516px',
+                                        skin: 'layui-layer-nobg', //没有背景色
+                                        shadeClose: true,
+                                        content: "<img src='"+$(this).attr("src")+"' >"
+                                    });
+                                });
+
+                            }
+                        });
+                        $("#image_box_{$dataItem[0]} .imgItem .delete_btn").on('click', function () {
+                            $(this).parent(".imgItem").remove();
+                        });
+                        $("#image_box_{$dataItem[0]} .imgItem img").on('click', function () {
+                            layer.open({
+                                type: 1,
+                                title: false,
+                                closeBtn: 0,
+//                                area: '516px',
+                                skin: 'layui-layer-nobg', //没有背景色
+                                shadeClose: true,
+                                content: "<img src='"+$(this).attr("src")+"' >"
+                            });
+                        });
+                {/case}
+            {/switch}
+        {/foreach}
+
+        //自定义验证规则
+        form.verify({
+            pass: [/(.+){6,12}$/, '密码必须6到12位']
+
+            {foreach $formData as $formkey=>$dataItem}
+            {switch name="$dataItem[2]"}
+            {case value="textarea"}
+            ,
+            content{$formkey}: function(value) {
+                layedit{$formkey}.sync(editIndex{$formkey});
+            }
+
+            {/case}
+            {/switch}
+            {/foreach}
+
+            });
+
+
+        var lock_ajax=false;
+        //监听提交
+        function getFromData(){
+            var search_box = {};
+            var formArray=$(".layui-form").serializeArray();
+            var select_group_list=[{foreach $formData as $formkey=>$dataItem}{switch name="$dataItem[2]"}{case value="select_group"}"{$dataItem[0]}",{/case}{/switch}{/foreach} "_____"];
+            var select_min_level={ {foreach $formData as $formkey=>$dataItem}{switch name="$dataItem[2]"}{case value="select_group"}
+                "{$dataItem[0]}" :{$dataItem[3]['min_level']},
+            {/case}{/switch}{/foreach} "________":0   };
+            var len = formArray.length;
+            var cur_num={};
+            for(var i=0;i<len;i++){
+
+                if(!formArray[i] || $.inArray(formArray[i].name,select_group_list) === -1){
+                    continue;
+                }
+                if(!cur_num[formArray[i].name]){
+                    cur_num[formArray[i].name]=1;
+                }else{
+                    cur_num[formArray[i].name]++;
+                }
+                if(cur_num[formArray[i].name] >select_min_level[formArray[i].name] &&  formArray[i]['value'] == "" ){
+                    formArray.splice(i,1);
+                }
+            }
+
+            $.each(formArray, function() {
+                if (search_box[this.name] && this.name.indexOf('[]') !=-1 ) {
+                    if (!search_box[this.name].push) {
+                        search_box[this.name] = [search_box[this.name]];
+                    }
+                    search_box[this.name].push(this.value || '');
+                } else {
+                    search_box[this.name] = this.value || '';
+                }
+
+            });
+
+            return search_box;
+        }
+
+
+        form.on('submit(demo1)', function(data) {
+            var loading=layer.load(2,{
+                shade: [0.2,'#000'] //0.1透明度的指定背景
+            });
+            if(lock_ajax){
+                return;
+            }
+
+
+            //console.log(layedit9.getContent(editIndex9) );
+//            var postData=data.field;
+            var postData=getFromData();
+            //console.log(data.field);
+            $("input[type=text]").removeClass('layui-form-danger');
+            $.ajax({
+                url:"{$submitUrl}",
+                dataType:"json",
+                data:postData,
+//                data:JSON.stringify(data.field),
+                type:"post",
+                success:function(data){
+                    layer.close(loading);//关闭loading层
+                    lock_ajax=false;
+                    if(!data.rel && data.msg){
+
+//                        console.log(data.list.error_field);
+                        if(data.list.error_field && $('.remark_'+data.list.error_field).length>0){
+                            $("html,body").animate(
+                                {scrollTop:$('.remark_'+data.list.error_field).offset().top}
+                                ,200);
+                            if($("input[name='"+data.list.error_field+"'][type=text]").length>0){
+                                $("input[name='"+data.list.error_field+"']")
+                                    .addClass('layui-form-danger').focus();
+                            }
+                            layer.tips(data.msg, '.remark_'+data.list.error_field, {
+                                tips: [2, '#ff0000'], time: 6000
+                            });
+                        }
+                        else{
+                            parent.layer.alert(data.msg,{icon: 5});
+                        }
+
+                    }
+
+
+                    if(data.rel){
+                        {block name="submit_ajax_success_af"}
+                        var callback=function(){
+                            if(data.closeWindow){
+                                if(self.frameElement !==null){
+                                    curId= self.frameElement.getAttribute('id');
+                                }
+                                if(curId)
+                                {
+                                    parent.layer.closeAll();
+                                }
+                                else if(parent.tab){
+                                    parent.tab.deleteTab(parent.tab.getCurrentTabId());
+
+                                }
+                                else{
+                                    window.opener=null;window.close();
+                                }
+                                return true;
+                            }
+                            if(data.url){
+                                if(parent.tab){
+                                    var curId= self.frameElement.getAttribute('data-id');
+                                    $('iframe[data-id=' + curId + ']',parent.document).attr('src',data.url)
+                                }else{
+                                    window.location.href=data.url;
+                                }
+                            }else{
+                                layer.msg('刷新页面', {icon: 1});
+                                window.location.reload();
+                            }
+                        }
+                        layer.confirm(data.msg?data.msg:"是否确认？", {
+                            icon: 1,
+                            btn: ['确定'] //按钮
+                        },callback);
+
+                        {/block}
+                    }
+                }
+            });
+//            layer.alert(JSON.stringify(data.field), {
+//                title: '最终的提交信息'
+//            })
+            return false;
+        });
+    });
+</script>
+</body>
+
+{block name="foot"}
+{/block}
+
+</html>

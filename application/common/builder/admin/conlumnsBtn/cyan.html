@@ -1,0 +1,40 @@
+<a href="javascript:;" target="_blank" class="layui-btn layui-btn-normal layui-btn-mini"  id="{$btn_id}">{$BtnName}</a>
+
+
+
+<script>
+    layui.use(['layer'], function(){
+
+        var layer = layui.layer;
+        var $ = layui.jquery;
+
+        var addBoxIndex = -1
+        $('#{$btn_id}').on('click', function() {
+            {notempty name="confirm.text"}
+            layer.confirm('{$confirm.text}', {icon: {$confirm.ico}, title:'提示'}, function(index){
+                {/notempty}
+
+
+                if(addBoxIndex !== -1)
+                    return;
+                //本表单通过ajax加载 --以模板的形式，当然你也可以直接写在页面上读取
+                layer.open({
+                    type: 2,
+                    title:'{$BtnName}',
+                    area: ['700px', '450px'],
+                    fixed: false, //不固定
+                    maxmin: true,
+                    shade: 0.8,
+                    content: '{$BtnUrl}'
+                });
+
+                // layer.close(index);
+                {notempty name="confirm.text"}}
+            );
+            {/notempty}
+
+
+        });
+    });
+
+</script>

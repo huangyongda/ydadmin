@@ -1,0 +1,193 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+{block name="top_content"}
+<div class="layui-tab" lay-filter="test1">
+    <ul class="layui-tab-title">
+        {volist name="data" id="vo"}
+
+        <li lay-id="{$vo}" class="{$cur == $vo?'layui-this':''}"
+            lay-url = "{:Url('/admin/RepBadRecord/index',['tab'=>trim($vo)])}">
+            <a href="{:Url('/admin/RepBadRecord/index',['tab'=>trim($vo)])}">{$key}</a>
+        </li>
+        {/volist}
+    </ul>
+</div>
+
+{// newBadRecord 显示统计}
+{eq name="cur" value="newBadRecord"}
+    <style>
+        .total_table td {
+            text-align:center;
+        }
+    </style>
+    <table class="total_table">
+        <colgroup>
+            <col width="100">
+            <col width="20">
+            <col width="100">
+            <col width="20">
+            <col width="100">
+            <col width="20">
+            <col width="100">
+        </colgroup>
+        <tbody>
+        <tr>
+            <td>全部不良</td>
+            <td> </td>
+            <td>待处理</td>
+            <td> </td>
+            <td>待罚款</td>
+            <td> </td>
+            <td>已处理</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="{:Url('/admin/RepBadRecord/index',['newBadTab'=>0])}">
+                    <button class="layui-btn {$newBadTab=='all'? '':'layui-btn-primary'} bad-all">...</button>
+                </a>
+            </td>
+            <td> = </td>
+            <td>
+                <a href="{:Url('/admin/RepBadRecord/index',['newBadTab'=>1])}">
+                    <button class="layui-btn {$newBadTab == 1 ? '':'layui-btn-primary'} bad-pending">...</button>
+                </a>
+            </td>
+            <td> + </td>
+            <td>
+                <a href="{:Url('/admin/RepBadRecord/index',['newBadTab'=>2])}">
+                    <button class="layui-btn {$newBadTab == 2 ? '':'layui-btn-primary'} bad-waitPenalty">...</button>
+                </a>
+            </td>
+            <td> + </td>
+            <td>
+                <a href="{:Url('/admin/RepBadRecord/index',['newBadTab'=>3])}">
+                    <button class="layui-btn {$newBadTab == 3 ? '':'layui-btn-primary'} bad-process">...</button>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{/eq}
+
+{/block}
+{block name="foot"}
+<script>
+    var $count = '{$dataSourceUrl}';
+    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['element'], function() {
+        var $ = layui.jquery;
+        var element = layui.element();
+        element.on('tab(test1)', function () {
+            var url = this.getAttribute('lay-url');
+        });
+    })
+</script>
+{/block}
+
+{// newBadRecord 显示统计}
+
+
+
+{block name="page_ajax_success_af"}
+{// 异步提交成功之后 <script> // }
+
+/** 显示“新不良记录”统计 **/
+if(result.newTab == 1)
+{
+    $('.bad-all').html(result.badCount.all);
+    $('.bad-pending').html(result.badCount.pending);
+    $('.bad-process').html(result.badCount.process);
+    $('.bad-waitPenalty').html(result.badCount. waitPenalty);
+}
+
+
+/** 操作按钮相关操作（只针对“新不良记录”） start **/
+
+// 获取当前列数据相关数据（状态，处理结果等）,以记录ID为键名 例如：“id:state”
+var status = [];
+var dataList = result.list;
+$.each(dataList,function(k,v){
+    temArr = {};
+    temArr['results'] = v.results; // 处理结果
+    temArr['state'] = v.state; // 处理状态
+    temArr['recordTotal'] = v.recordTotal; // 前科总数
+    status[v.id] = temArr
+});
+
+// 获取列表数据的所有tr，对每条数据的元素进行操作
+var $tr = $('#content').children('tr');
+
+// 新不良记录的相关操作
+if(result.newTab == 1)
+{
+    // 遍历列表数据
+    $tr.each(function(item){
+        var $this = $(this);
+        var $id = $this.children('td:eq(1)').html();
+        var $lastTd = $this.children('td:last');
+
+        /** 输出"操作"按钮 **/
+        $lastA = $lastTd.find('a:last'); // 获取最后一个按钮（前科）
+        // 创建a标签
+        if(status[$id]['state'] == 3) // 已处理
+        {
+            $lastTd.find('a:first').remove();
+            $lastTd.find('a:first').remove();
+            var $resultHtml = document.createElement('span');
+            $resultHtml.className = ' layui-btn-normal layui-btn layui-btn-mini pj_btn';
+            $resultHtml.innerHTML = status[$id]['results']+' ';
+            $lastTd[0].appendChild($resultHtml);
+        }
+        else if(status[$id]['state'] == 2 && result.newBadTab == 0) // 待罚款（新不良记录->全部不良）
+        {
+            $lastTd.find('a:first').remove();
+            $lastTd.find('a:first').remove();
+            var $penalty = document.createElement('span');
+            $penalty.style.color = '#ff3f43';
+            $penalty.innerHTML = '待罚款 ';
+            $lastTd[0].appendChild($penalty);
+        }
+        else if(status[$id]['state'] == 2 && result.newBadTab == 0) // 待罚款（新不良记录->全部不良）
+        {
+            $lastTd.find('a:first').remove();
+            $lastTd.find('a:first').remove();
+            var $penalty = document.createElement('span');
+            $penalty.style.color = '#ff3f43';
+            $penalty.innerHTML = '待罚款 ';
+            $lastTd[0].appendChild($penalty);
+        }
+
+        $lastTd[0].appendChild($lastA[0]);
+        // 输出操作按钮 end
+
+        // 删除批量操作复选框
+        if(status[$id]['state'] == 3) {
+//            $this.children('td:first').children('input:checkbox').attr('disabled','disabled');
+            $this.children('td:first').html('');
+
+        }
+    });
+}
+else
+{
+    $tr.each(function(item){
+        var $this = $(this);
+        var $id = $this.children('td:first').text();
+        var $lastTd = $this.children('td:last');
+        /** 输出"操作"按钮 **/
+        $lastA = $lastTd.find('a:last'); // 获取最后一个按钮（前科）
+        // 如果前科为0，则不显示前科按钮
+        if(status[$id]['recordTotal'] <= 0) {
+            $lastA.remove();
+        }
+    });
+
+}
+
+
+/** 操作按钮相关操作（只针对“新不良记录”） end **/
+
+
+    //{// 异步提交成功之后 </script> }
+    {/block}

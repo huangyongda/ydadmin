@@ -1,0 +1,46 @@
+<!-- 证件照 -->
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">证件照</h3>
+        <fieldset class="layui-elem-field">
+            <div class="layui-field-box">
+
+
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-md2 layui-col-md-offset1">
+                        <b>营业执照</b>
+                        <div class="layui-col-md12">
+                            <a href="javascript:;"
+                               class="checkImage" title="点击查看大图">
+                                <img src="{$userInfo.profilePicture.license_photo_url}" width="100%" alt="营业执照">
+                            </a>
+                        </div>
+
+                    </div>
+
+                    <div class="layui-col-md2 layui-col-md-offset1">
+                        <b>税务登记证</b>
+                        <div class="layui-col-md12">
+                            <a href="javascript:;"
+                               class="checkImage" title="点击查看大图">
+                                <img src="{$userInfo.profilePicture.tax_photo_url}" width="100%" alt="税务登记证">
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-md2 layui-col-md-offset1">
+                        <b>特殊资质证</b>
+                        <div class="layui-col-md12">
+                            <a href="javascript:;"
+                               class="checkImage" title="点击查看大图">
+                                <!--http://oasys.cug2313.com/Uploads/ID/30/91/58cb58b722f5c.jpg-->
+                                <img src="{$userInfo.profilePicture.spe_qua_photo_url}" width="100%" alt="特殊资质证">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</li>

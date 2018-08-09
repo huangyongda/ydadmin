@@ -1,0 +1,86 @@
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">基本资料
+            <h3 class="layui-timeline-title">
+                {if condition="$userInfo.role_id !=12 && $userInfo.role_id !=13"}
+                    <button class="layui-btn layui-btn-primary layui-btn-mini editInfo"
+                            request-url="{:url('editDetail',['uid'=>input('menu_id')])}"
+                            title="修改">
+                        <i class="layui-icon"></i>
+                    </button>
+                {/if}
+            </h3>
+        </h3>
+        <div class="layui-field-box">
+            <table class="layui-table">
+                <tbody>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">用户名：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.account}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">账号状态：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.user_status_str}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">是否属于子帐号：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.pidStr}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">账号审核状态：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.user_status_str}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">最后登录ip：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.lastlogin_ip}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">最后登录时间：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.lastlogin_time}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">E-mail：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.email}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">真实姓名：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.realname}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">注册时间：</td>
+                    <td style="text-align: center;">
+                        {if condition="strtotime($userInfo.register_time) <=0"}
+                            /
+                        {else /}
+                            {$userInfo.register_time}
+                        {/if}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">账号类型：</td>
+                    <td style="text-align: center;">
+                        后台用户
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">用户角色：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.role_name}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">联系方式：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.tel}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</li>

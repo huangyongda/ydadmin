@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+  Options +FollowSymlinks -Multiviews
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^(.*)$ /~huangyd/ydAdmin/html/index.php?s=/$1 [QSA,PT,L]  # 此处替换成自己的路径
+</IfModule>
+setEnv Web_Debug 1
+#setEnv API_PROXY 192.168.11.103:8888   # 此处如果需要代理抓包替换成自己的ip和端口
+setEnv MEMCACHE_SERVER 192.168.10.250:11211
+setEnv REDIS_SERVER 192.168.10.250:6379
+#setEnv Runtime_Path /home/liuy/runtime
+setEnv mytestRuntime_Path /home/liuy/runtime
+
+SetEnv RUN_MODE production

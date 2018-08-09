@@ -1,0 +1,110 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+{block name="foot"}
+<script>
+    layui.use(['form'], function() {
+        var form = layui.form(),
+            layer = layui.layer;
+        var $ = layui.jquery;
+        //材料
+        var accessories = "<button class=\"layui-btn layui-btn-radius kindedit\"  data-url=\"{:Url('KindsManagement/kindAccessories',['kid'=>$kid,'type'=>$type])}\" data-BtnName=\"查看\" lay-filter=\"fitting\">查看</button>";
+        $("#accessories").parent().append(accessories);
+        //公共属性
+                var attr = "";
+                {php} if(isset($attr_list)){ {/php}
+                    {volist name="attr_list" id="vo"}
+                    attr += "<div class='attr_list' style='margin: 3px;'>" +
+                        "<button class='attr layui-btn layui-btn-primary ' attr-data='{$vo.id}' >{$vo.title}</button>" +
+                        {volist name="vo.data" id="data"}
+                    "<button class='attr layui-btn layui-btn-radius layui-btn-primary' attr-data='{$data.id}' style='margin: 3px;'>{$data.title}</button>" +
+                    {/volist}
+                    "</div>";
+                    {/volist}
+                        {php} } {/php}
+                $("#attr").parent().append(attr);
+                $(".attr").click(function () {
+                    return false;
+                });
+                //私有属性
+                var attr_private = "";
+                {php} if(isset($attr_private)){ {/php}
+                    {volist name="attr_private" id="vo"}
+                    attr_private += "<div class='attr_list' style='margin: 3px;'>" +
+                        "<button class='attr layui-btn layui-btn-primary fitting_attr' attr-data='{$vo.id}' >{$vo.title}<b class='attr_name kindedit' data-url=\"{:Url('KindsManagement/deleteFittingAttr',['id'=>$vo.id])}\" data-reload = '1' data-confirm='确定删除本私有属性?' style='display: none;margin: 3px'>x</b></button>" +
+                        {volist name="vo.data" id="data"}
+                    "<button class='layui-btn layui-btn-radius layui-btn-primary fitting_attr' attr-data='{$data.id}' style='margin: 3px;'>{$data.title}<b  class='attr_val_name  kindedit' data-reload = '1' data-url=\"{:Url('KindsManagement/deleteFittingAttrPer',['id'=>$data.id])}\" data-reload = '1' data-confirm='确定删除本私有属性?'  style='display: none;margin: 10px'>x</b></button>" +
+                    {/volist}
+                    "<button  style='display: none' class='add_attr_val layui-btn layui-btn-radius layui-btn-normal kindedit' data-reload = '1' data-url=\"{:Url('KindsManagement/fittingAttrPerAdd',['type'=>$type,'pid'=>$vo.id])}\" data-BtnName=\"追加属性\"  attr-data='{$vo.id}'>追加</button>" +
+                    "</div>";
+                    {/volist}
+                        {php} } {/php}
+                        attr_private  +=  "<div class='attr_add' style='margin: 10px;'>" +
+                            "<button  class='kindedit layui-btn layui-btn-radius layui-btn-normal fitting_attr' data-reload='1'  data-url=\"{:Url('KindsManagement/fittingAttrAdd',['kid'=>$kid,'type'=>$type])}\" data-BtnName=\"添加属性\">添加私有属性</button>" +
+                            "</div>";
+                $("#attr_private").parent().append(attr_private);
+                $(".fitting_attr").click(function () {
+                            return false;
+                });
+                $(".kindedit").click(function(){
+                    var url = $(this).attr("data-url");
+                    var title = $(this).attr("data-BtnName");
+                    var confirm = $(this).attr("data-confirm");//提示信息
+                    var reload = $(this).attr("data-reload");//是否刷新页面
+                    if(confirm){
+                        layer.confirm(confirm, {icon: 3, title:'提示'},function (){
+                            $.ajax({
+                                url:url,
+                                dataType:"json",
+                                data:title,
+                                type:"post",
+                                success:function(data){
+                                    if(data.rel && data.msg){
+                                        parent.layer.alert(data.msg,{icon: 6},function(index){
+                                            parent.layer.close(index);
+                                            if(reload){
+                                                location.reload();
+                                            }
+                                        });
+                                    }
+                                    if(!data.rel && data.msg){
+                                        parent.layer.alert(data.msg,{icon: 5},function(index){
+                                            parent.layer.close(index);
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    }else{
+                        layer.open({
+                            type: 2,
+                            title:title,
+                            shadeClose: true,
+                            area: ['1050px', '675px'],
+                            fixed: false, //不固定
+                            maxmin: true,
+                            shade: 0.3,
+                            content: url,
+                            end: function () {
+                                if(reload){
+                                    location.reload();
+                                }
+                            }
+                        });
+                    }
+                    return false;
+                });
+                $(".attr_list").hover(function(){
+                    $(this).find(".add_attr_val").show();
+                },function(){
+                    $(this).find(".add_attr_val").hide();
+                });
+                $(".attr_list button").hover(function(){
+                    $(this).find("b").show();
+                },function(){
+                    $(this).find("b").hide();
+                });
+            });
+
+
+</script>
+{/block}

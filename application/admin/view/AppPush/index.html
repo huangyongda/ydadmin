@@ -1,0 +1,40 @@
+{// 模板继承 }
+{block name="top_content"}
+{/block}
+{extend name="$viewbasetpl" /}
+{block name="foot"}
+<script>
+    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['form','element'], function() {
+        var layer = layui.layer;
+        var $ = layui.jquery;
+        var form = layui.form();
+        hidden();
+        form.on('select(type)', function(data){
+            var value =parseInt(data.value);
+            switch (value){
+                case 1:
+                    hidden();
+                    $("[name = 'role[]']").parent().parent().attr('style',"display:block");
+                    break;
+                case 2:
+                    hidden();
+                    $("[name = 'single']").parent().parent().parent().attr('style',"display:block");
+                    break;
+                case 3:
+                    hidden();
+                    $("[name = 'all[]']").parent().parent().attr('style',"display:block");
+                    break;
+                default:
+                    hidden();
+                    break;
+            }
+        });
+        function hidden(){
+            $("[name = 'single']").parent().parent().parent().attr('style',"display:none");
+            $("[name = 'all[]']").parent().parent().attr('style',"display:none");
+            $("[name = 'role[]']").parent().parent().attr('style',"display:none");
+        }
+    })
+</script>
+{/block}

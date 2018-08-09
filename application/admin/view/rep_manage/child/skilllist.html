@@ -1,0 +1,37 @@
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">维修技能
+            {if condition="isset($pageType) && $pageType == 0"}
+                <button class="layui-btn layui-btn-primary layui-btn-mini editInfo"
+                        request-url="{:url('editSkill',['uid'=>$userInfo['baseInfo']['id']])}"
+                        title="修改">
+                    <i class="layui-icon"></i>
+                </button>
+            {/if}
+        </h3>
+        <table class="layui-table">
+            <thead><tr><th>维修技能</th></tr></thead>
+            <tbody>
+            <tr>
+                <td style="text-align: center;" >
+                    {volist name="$userInfo['skillList']" id="vo"}
+                    <div style="margin-bottom: 5px;display:inline-block;">
+                        <span class="layui-badge {$vo.isAuth?'layui-bg-green':'layui-bg-gray'}"
+                              style="padding: 3px 4px;">
+                            {$vo.skillName}
+                        </span>
+                    </div>
+                    {/volist}
+                </td>
+            </tr>
+            {eq name="$userInfo.baseInfo.isOldRep" value='true'}
+                <thead><tr><th>注：“未通过”表示考试系统上线前，通过审核的旧师傅未通过认证考试</th></tr></thead>
+            {else/}
+                <thead><tr><th>注：“未通过”表示考试系统上线后，通过审核的新师傅未通过认证考试，不能接该品类的单</th></tr></thead>
+            {/eq}
+            </tbody>
+        </table>
+
+    </div>
+</li>

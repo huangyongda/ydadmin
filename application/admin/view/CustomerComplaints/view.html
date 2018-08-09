@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="__STATIC__/layui/plugins/layui/css/layui.css?v=12" media="all" />
+    <link rel="stylesheet" href="__STATIC__/layui/plugins/font-awesome/css/font-awesome.min.css">
+    <script type="text/javascript" src="__STATIC__/layui/plugins/layui/layui.js"></script>
+</head>
+<style>
+    .layui-btn-warm+.layui-btn-warm {
+        margin-left: 0px;
+        margin-top: 1px;
+        width: 100px;
+    }
+    .bth-bth{
+        margin-top: 60px;
+    }
+    .positionclass{
+        margin-top:5px;text-align: center;position: fixed;
+        filter: alpha(opacity=0.5);
+        filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
+        -ms-filter:'progid:DXImageTransform.Microsoft.Alpha(Opacity=50)';
+    }
+</style>
+<body>
+<div class="layui-container">
+    <div class="layui-row layui-col-space10">
+        <!-- LEFT -->
+        <div class="layui-col-md11">
+            <div class="grid-demo grid-demo-bg1">
+                {include file='CustomerComplaints/view_child/initiator_table'}
+                {include file='CustomerComplaints/view_child/complaint_table'}
+                {include file='CustomerComplaints/view_child/accept_table'}
+                {include file='CustomerComplaints/view_child/follow_table'}
+                {include file='CustomerComplaints/view_child/form_table'}
+
+
+            </div>
+        </div>
+        <!-- LEFT END  -->
+
+        <!-- RIGHT -->
+        <div class="layui-col-md1">
+            <div class="grid-demo">
+                <div class="positionclass" style="width: 100px;">
+                    <div class="bth-bth ">
+                        <button class="layui-btn layui-btn-warm refresh record" style="width: 120px;">
+                            跟单记录
+                        </button>
+                        {if condition="$info['status'] eq 2"}
+                        <button class="layui-btn layui-btn-warm endComplaint" style="width: 120px;" lay-class="layui-form-editComplaintInfo" request-url="{:url('editComplaintInfo',['end'=>'1'])}">
+                            完结客诉
+                        </button>
+                        <button class="layui-btn layui-btn-warm send_message"  title-name="客诉发送短信" request-url="{:url('Visitcustomer/visitCustomerSendMessage',['id'=>$info['wid']])}" style="width: 120px;">
+                            发送短信
+                        </button>
+                        {else}
+                        {/if}
+                        <!--<button class="layui-btn layui-btn-warm refresh" style="width: 120px;">转单</button>-->
+                        <!--<button class="layui-btn layui-btn-warm refresh" style="width: 120px;">-->
+                            <!--刷新-->
+                        <!--</button>-->
+            </div>
+        </div>
+            </div>
+        </div>
+        <!-- RIGHT END -->
+
+    </div>
+</div>
+
+</body>
+<script>
+    layui.use(['form', 'layedit', 'laydate','upload','element'], function() {
+        var form = layui.form(),
+                layer = layui.layer,
+                laydate = layui.laydate;
+        var $ = layui.jquery;
+        var lock_ajax=false;
+        //客诉完结或未受理 页面不可编辑
+        var status = "{$info.status}";
+        if(status !="2"){
+            $("input").attr('disabled',true);
+        }
+        function getFromData(classname){
+            var search_box = {};
+            $.each($("."+ classname).serializeArray(), function() {
+                if (search_box[this.name] && this.name.indexOf('[]') !=-1 ) {
+                    if (!search_box[this.name].push) {
+                        search_box[this.name] = [search_box[this.name]];
+                    }
+                    search_box[this.name].push(this.value || '');
+                } else {
+                    search_box[this.name] = this.value || '';
+                }
+
+            });
+
+            return search_box;
+        }
+        //完结客诉
+        $('.endComplaint').click(function(){
+            var url = $(this).attr("request-url");
+            var classname = $(this).attr('lay-class');
+            layer.confirm('是否完结客诉?', {icon: 3, title:'完结客诉'},function(index){
+                var postData = getFromData(classname);
+                $.ajax({
+                    url:url,
+                    type:'post',
+                    dateType:'json',
+                    data:postData,
+                    success:function(data)
+                    {
+                        if(data.rel)
+                        {
+                            parent.layer.msg(
+                                data.msg,
+                                {
+                                    icon: 6,
+                                    time: 1000
+                                },
+                                function(){
+                                    window.location.reload();
+                                }
+                            );
+
+                        }
+                        else
+                        {
+                            parent.layer.msg(data.msg, {icon: 5, time: 1000});
+                        }
+                    }
+
+                });
+                layer.close(index);
+            });
+        });
+//        投诉类型
+        form.on('radio(reason)', function(data) {
+            $('.reason').hide();
+            var dat = $(this).attr('lay-data');
+            var c = 'reason_'+ dat;
+            $('.'+c).show();
+        });
+
+
+//        跟进记录
+        form.on('submit(message)',function(data){
+            var loading=layer.load(2,{
+                shade: [0.2,'#000'] //0.1透明度的指定背景
+            });
+            if(lock_ajax){
+                return;
+            }
+            var classname = $(this).attr('lay-class');
+            var postData = getFromData(classname);
+            var url = $(this).attr('lay-url');
+            $.ajax({
+                url:url,
+                dataType:"json",
+                data:postData,
+                type:"post",
+                success:function(data){
+                    layer.close(loading);//关闭loading层
+                    lock_ajax=false;
+                    if(!data.rel && data.msg){
+                        if(data.list.error_field && $('.remark_'+data.list.error_field).length>0){
+                            $("html,body").animate(
+                                    {scrollTop:$('.remark_'+data.list.error_field).offset().top}
+                                    ,200);
+                            if($("input[name='"+data.list.error_field+"'][type=text]").length>0){
+                                $("input[name='"+data.list.error_field+"']")
+                                        .addClass('layui-form-danger').focus();
+                            }
+                            layer.tips(data.msg, '.remark_'+data.list.error_field, {
+                                tips: [2, '#ff0000'], time: 6000
+                            });
+                        }
+                        else{
+                            parent.layer.alert(data.msg,{icon: 5});
+                        }
+                    }
+                    if(data.rel){
+
+                        layer.confirm(data.msg, {
+                            icon: 1,
+                            btn: ['确定'] //按钮
+                        }, function(){
+                            layer.msg('刷新页面', {icon: 1});
+                            window.location.reload();
+                        });
+
+                    }
+                }
+            });
+            return false;
+        });
+        //客服发送短信
+        $('.send_message').click(function(){
+            var title = $(this).attr("title-name");
+            var url = $(this).attr("request-url");
+            layer.open({
+                type: 2,
+                title:title,
+                area: ['700px', '450px'],
+                fixed: false, //不固定
+                maxmin: true,
+                shade: 0.3,
+                content: url
+            });
+            layer.close();
+        });
+        //显示跟单记录
+        $(".record").click(function(){
+            $(".trackingRecord").fadeToggle();
+        });
+    });
+</script>
+
+</html>

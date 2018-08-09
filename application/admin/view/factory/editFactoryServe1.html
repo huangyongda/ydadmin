@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="__STATIC__/layui/plugins/layui/css/layui.css?v=12" media="all" />
+    <link rel="stylesheet" href="__STATIC__/layui/plugins/font-awesome/css/font-awesome.min.css">
+    <script type="text/javascript" src="__STATIC__/layui/plugins/layui/layui.js"></script>
+</head>
+<body>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">厂商服务
+        </h3>
+        <div class="layui-field-box">
+            <form action="updateFactoryServe"  >
+            <table class="layui-table">
+                <tbody>
+                <tr>
+                    <input type="hidden" id="id" name="id" value='{$kefu_list.id}'>
+                    <input type="hidden" id="uid" name="uid" value='{:input("uid")}'>
+                    <td>业务员:</td>
+                    <td>
+                            {$factory_list['salesman']}
+                    </td>
+
+                    <td>推荐人</td>
+                    <td>
+                        {$pro['realname']}
+                    </td>
+                </tr>
+                <tr>
+                    <td>服务专员:</td>
+                    <td>
+                        <select class="input_width" id="zy_name" name='zy_name' style="height:25px; line-height:25px; padding:3px 0px 3px 6px; border:solid 1px #ccc; width:150px;">
+                            <option value="">= 请选择 =</option>
+                            <!--<if condition="$factory_list.zy_id eq '0'">-->
+                            <!--<option value="">= 请选择 =</option>-->
+                            <!--<else />-->
+                            <!--<option value="{$factory_list.zy_id}">{$factory_list.zy_name}</option>-->
+                            <!--</if>-->
+
+                            {volist name="fuwu_list" id="vo"}
+                                <option value="{$vo.id}"
+                                    <?php
+                                        if($factory_list['zy_id'] == $vo['id']){
+                                            echo 'selected';
+                                        }
+                                    ?>
+                            >{$vo.realname}</option>
+                            {/volist}
+                        </select>
+                        <!--<input type="text"  class="input_width " id="zy_name" name='zy_name' value="{$factory_list.zy_name}" />-->
+                    </td>
+                    <td>品类:</td>
+                    <td><input type="text"  class="input_width " id="attr" name='attr' value="{$factory_list.attr}"  style="padding-left:10px;border:solid 1px #ccc; height:26px; line-height:26px;"/></td>
+                </tr>
+                <tr>
+                    <td>销售模式:</td>
+                    <td><input type="text"  class="input_width " id="sale_mode" name='sale_mode' value="{$factory_list.sale_mode}" style="padding-left:10px;border:solid 1px #ccc; height:26px; line-height:26px;"/></td>
+                    <td>客维专员:</td>
+                    <td><input type="text"  class="input_width " id="guest_name" name='guest_name' value="{$factory_list.guest_name}" style="padding-left:10px;border:solid 1px #ccc; height:26px; line-height:26px;"/></td>
+                </tr>
+                </tbody>
+            </table>
+                <div class="sub" style="margin-left: 410px;">
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

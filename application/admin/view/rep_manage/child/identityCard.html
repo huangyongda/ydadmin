@@ -1,0 +1,44 @@
+<!-- 上传照片 -->
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">上传照片
+            {if condition="isset($pageType) && $pageType == 0"}
+                <button class="layui-btn layui-btn-primary layui-btn-mini editInfo"
+                        request-url="{:url('editPicture',['uid'=>$userInfo['baseInfo']['id']])}"
+                        title="修改照片">
+                    <i class="layui-icon"></i>
+                </button>
+            {/if}
+        </h3>
+        <fieldset class="layui-elem-field">
+            <div class="layui-field-box">
+
+
+                <div class="layui-row layui-col-space10">
+                    <div class="layui-col-md2 layui-col-md-offset1">
+                        <b>证件正面照</b>
+                        <div class="layui-col-md12">
+                            <a href="javascript:;"
+                               class="checkImage" title="点击查看大图">
+                                <img src="{$userInfo.profilePicture.id_photo_front_url}" width="100%" alt="证件正面照">
+                            </a>
+                        </div>
+
+                    </div>
+
+                    <div class="layui-col-md2 layui-col-md-offset1">
+                        <b>证件反面照</b>
+                        <div class="layui-col-md12">
+                            <a href="javascript:;"
+                               class="checkImage" title="点击查看大图">
+                                <img src="{$userInfo.profilePicture.id_photo_reverse_url}" width="100%" alt="证件反面照">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+    </div>
+</li>

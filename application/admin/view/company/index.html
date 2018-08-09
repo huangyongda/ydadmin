@@ -1,0 +1,18 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+
+{// 页面异步提交成功之后 }
+{block name="page_ajax_success_af"}
+$("#content tr td").each(function(){
+if($(this).text()==="禁用"){
+$(this).parents("tr").find("a[data-btnname='禁止后台登录']").remove();
+}
+if($(this).text()==="正常"){
+$(this).parents("tr").find("a[data-btnname='允许后台登录']").remove();
+}
+
+
+});
+
+{/block}

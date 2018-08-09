@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    {php}   if(!isset($cur_menu_id)){ $cur_menu_id="2"; }   {/php}
+    {include file="static/admin/header.html" /}
+</head>
+<body>
+<div class="layui-layout layui-layout-admin" style="border-bottom: solid 5px #1aa094;">
+    {include file="static/admin/top_menu.html" /}
+    <div class="layui-side layui-bg-black" id="admin-side">
+        <div class="layui-side-scroll" id="admin-navbar-side" lay-filter="side"></div>
+    </div>
+    <div class="layui-body" style="bottom: 0;border-left: solid 2px #1AA094;" id="admin-body">
+        <div class="layui-tab admin-nav-card layui-tab-brief" lay-filter="admin-tab">
+            <ul class="layui-tab-title">
+                <li class="layui-this">
+                    <i class="fa fa-dashboard" aria-hidden="true"></i>
+                    <cite>控制面板</cite>
+                </li>
+            </ul>
+            <div class="layui-tab-content" style="min-height: 150px; padding: 5px 0 0 0;">
+                <div class="layui-tab-item layui-show">
+                    <iframe src="{:url('admin/index/main')}"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-footer footer footer-demo" id="admin-footer">
+        <div class="layui-main">
+            <p>2017 &copy;
+                <a href="http://www.cug2313.com/">www.cug2313.com </a> 中国联保
+            </p>
+        </div>
+    </div>
+    <div class="site-tree-mobile layui-hide">
+        <i class="layui-icon">&#xe602;</i>
+    </div>
+    <div class="site-mobile-shade"></div>
+    <?php if($left_menu_list){ ?>
+    <script type="text/javascript" src="__STATIC__/layui/plugins/layui/layui.js"></script>
+    <script src="__STATIC__/layui/js/index.js"></script>
+    <script>
+        var navs = {$left_menu_list};
+    </script>
+    <?php } ?>
+</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+
+{// 页面异步提交成功之后 }
+{block name="page_ajax_success_af"}
+var radi = $("input[type='radio']:checked").val();
+
+console.log(ai);
+
+{/block}

@@ -1,0 +1,29 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+
+{// 页面异步提交成功之后 }
+{block name="page_ajax_success_af"}
+$("#content tr").each(function(){
+var type = $(this).children("td").eq(1).text();
+var c_type = $(this).children("td").eq(5).text();
+console.log(type);
+console.log(c_type);
+if(type != "普通客户" && c_type == "有服务标准"){
+    $(this).find("a[data-btnname='服务标准添加']").remove();
+}
+if(type == "普通客户" && c_type == "无服务标准"){
+    $(this).find("a[data-btnname='服务标准添加']").remove();
+    $(this).find("a[data-btnname='服务标准编辑']").remove();
+    $(this).find("a[data-btnname='服务标准删除']").remove();
+}
+if(type != "普通客户" && c_type == "无服务标准"){
+    $(this).find("a[data-btnname='服务标准编辑']").remove();
+    $(this).find("a[data-btnname='服务标准删除']").remove();
+}
+
+
+
+});
+
+{/block}

@@ -1,0 +1,19 @@
+<!--<button type="button" class="layui-btn layui-btn-small" id="getAll"><i class="fa fa-plus" aria-hidden="true"></i> 添加</button>-->
+{php}   if(!isset($BtnUrl)){ $BtnUrl=""; }   {/php}
+{php}   if(!isset($fromName)){ $fromName=""; }   {/php}
+
+<a href="javascript:;"
+   class=" {$style} layui-btn layui-btn-small pj_btn" id="{$btn_id}" data-fromName = "{$fromName}"
+
+   {notempty name="BtnUrl"}
+    data-url="{:urldecode($BtnUrl)}"
+   {/notempty}
+   data-BtnName="{$BtnName}"
+   data-OpenType="{$OpenType}"
+
+   {notempty name="confirm.text"}
+   data-confirm-text="{$confirm.text}" data-confirm-ico="{$confirm.ico}"
+   {/notempty}
+>
+    <i class="fa  {notempty name='icoName'} {$icoName} {/notempty}"> </i> {$BtnName}
+</a>

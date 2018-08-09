@@ -1,0 +1,46 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+{block name="top_content"}
+
+{/block}
+
+{// 页面异步提交成功之后 }
+{block name="page_ajax_success_af"}
+var par = $(":button").parent().hasClass('statistics');
+if(!par){
+var html = '<div class=" layui-word-aux layui-input-inline statistics" style="padding:0;float: right;"><button lay-filter="search_remote" class="layui-btn layui-input-inline" lay-submit><i class="fa fa-search" aria-hidden="true"></i>数据统计</button></div>';
+var fat = $(":button").parent().parent().append(html);
+}
+form.on('submit(search_remote)', function (data) {
+    var data =  getFromData();
+    var param = "";
+    if(data.searchStarttime){
+        param += "&searchStarttime="+ data.searchStarttime;
+    }
+    if(data.searchEndtime){
+        param += "&searchEndtime="+ data.searchEndtime;
+    }
+    if(data.area_id){
+        param += "&area_id="+ data.area_id;
+    }
+    if(data.area_code){
+        param += "&area_code="+ data.area_code;
+    }
+    if(data.reptype){
+        param += "&reptype="+ data.reptype;
+    }
+
+    var url = "{:url('remotefeeStatisticsdata')}"+"?"+param.substr(1,param.length);
+    layer.open({
+        type: 2,
+        title:'远程费统计',
+        area: ['700px', '450px'],
+        fixed: false, //不固定
+        maxmin: true,
+        shade: 0.3,
+        content:url
+    });
+    return false;
+});
+
+{/block}

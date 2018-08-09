@@ -1,0 +1,97 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+{block name="foot"}
+<script>
+    layui.use(['form'], function() {
+        var form = layui.form(),
+            layer = layui.layer;
+        var $ = layui.jquery;
+        var service = "<button class=\"layui-btn layui-btn-radius kindedit\"  data-url=\"{:Url('KindsManagement/service',['kid'=>$kid])}\" data-BtnName=\"服务内容\" lay-filter=\"fitting\">查看服务内容</button>\n";
+        var fitting = "<button class=\"layui-btn layui-btn-radius kindedit\"  data-url=\"{:Url('KindsManagement/kindFitting',['kid'=>$kid])}\" data-BtnName=\"配件\" lay-filter=\"fitting\">查看配件</button>\n";
+        var attr = "";
+        {php} if(isset($attr_list)){ {/php}
+            {volist name="attr_list" id="vo"}
+            attr += "<div class='attr_list' style='margin: 3px;'>" +
+                "<button class='attr layui-btn layui-btn-primary attr_per'  attr-data='{$vo.id}' >{$vo.title}<b class='kindedit'  data-url=\"{:Url('KindsManagement/deleteAttr',['id'=>$vo.id])}\" data-reload = '1' data-confirm='确定删除本属性?'  style='display: none;margin: 3px'>x</b></button>" +
+                {volist name="vo.data" id="data"}
+            "<button class='layui-btn layui-btn-radius layui-btn-primary attr_per' attr-data='{$data.id}' style='margin: 3px;'>{$data.title}<b  class='kindedit' data-url=\"{:Url('KindsManagement/deleteAttrPer',['id'=>$data.id])}\" data-reload = '1' data-confirm='确定删除本属性?' style='display: none;margin: 10px'>x</b></button>" +
+            {/volist}
+            "<button  style='display: none' class='add_attr_val layui-btn layui-btn-radius layui-btn-normal kindedit' data-url=\"{:Url('KindsManagement/addAttrPer',['id'=>$vo.id])}\"  attr-data='{$vo.id}'  data-reload = '1' data-BtnName=\"追加属性\"  >追加</button>" +
+            "</div>";
+            {/volist}
+                {php} } {/php}
+                attr  +=  "<div class='attr_add' style='margin: 10px;'>" +
+                    "<button  class='kindedit layui-btn layui-btn-radius layui-btn-normal'  data-url=\"{:Url('KindsManagement/attradd',['kid'=>$kid])}\" data-reload = '1' data-BtnName=\"添加属性\">添加属性</button>" +
+                    "</div>";
+                $("#attr").parent().append(attr);
+                $("#service").parent().append(service);
+                $("#fitting").parent().append(fitting);
+                $(".attr_per").click(function () {
+                   return false;
+                });
+                $(".attr_list").hover(function(){
+                    $(this).find(".add_attr_val").show();
+                },function(){
+                    $(this).find(".add_attr_val").hide();
+                });
+                $(".attr_list button").hover(function(){
+                    $(this).find("b").show();
+                },function(){
+                    $(this).find("b").hide();
+                });
+                $(".kindedit").click(function(){
+                    var url = $(this).attr("data-url");//弹窗 url
+                    var title = $(this).attr("data-BtnName");//弹窗标题
+                    var confirm = $(this).attr("data-confirm");//提示信息
+                    var reload = $(this).attr("data-reload");//是否刷新页面
+                    if(confirm){
+                        layer.confirm(confirm, {icon: 3, title:'提示'},function (){
+                            $.ajax({
+                                url:url,
+                                dataType:"json",
+                                data:title,
+                                type:"post",
+                                success:function(data){
+                                    if(data.rel && data.msg){
+                                        parent.layer.alert(data.msg,{icon: 6},function(index){
+                                            parent.layer.close(index);
+                                            if(reload){
+                                                location.reload();
+                                            }
+                                        });
+                                    }
+                                    if(!data.rel && data.msg){
+                                        parent.layer.alert(data.msg,{icon: 5},function(index){
+                                            parent.layer.close(index);
+                                        });
+                                    }
+                                }
+                        });
+                        });
+                    }else{
+                        layer.open({
+                            type: 2,
+                            title:title,
+                            shadeClose: true,
+                            area: ['800px', '675px'],
+                            fixed: false, //不固定
+                            maxmin: true,
+                            shade: 0.3,
+                            content: url,
+                            success: function(layero, index){
+                                console.log(layero, index);
+                            },
+                            end: function () {
+                                if(reload){
+                                    location.reload();
+                                }
+                            }
+                        });
+                    }
+                    return false;
+                });
+            });
+
+
+</script>
+{/block}

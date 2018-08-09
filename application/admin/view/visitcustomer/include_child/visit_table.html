@@ -1,0 +1,27 @@
+<div class="layui-timeline-content layui-text">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;width: 70%">
+        <legend>回访人信息(
+            {switch name="info.consumer_content.status" }
+            {case value="1" break="1"}已回访{/case}
+            {case value="2" break="1"}回访中{/case}
+            {default /}等待回访
+            {/switch}
+            )</legend>
+    </fieldset>
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th style="text-align: center;">回访人</th>
+            <th style="text-align: center;">账号</th>
+            <th style="text-align: center;">身份</th>
+            <th style="text-align: center;">回访时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <td style="text-align: center;">{$info.consumer_content.visiter.realname}</td>
+        <td style="text-align: center;">{$info.consumer_content.visiter.account}</td>
+        <td style="text-align: center;">{$info.consumer_content.visiter.role_name}</td>
+        <td style="text-align: center;">{$info.consumer_content.time|date="Y-m-d H:i:s",###}</td>
+        </tbody>
+    </table>
+</div>

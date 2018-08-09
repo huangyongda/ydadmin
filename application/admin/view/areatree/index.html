@@ -1,0 +1,55 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+{block name="foot"}
+<script>
+    layui.use(['form'], function() {
+        var $ = layui.jquery;
+        $("input[name='selectStr']").keyup(function(){
+	       	$("#content tr").hide();
+       		var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+       		var search = $("input[name='selectStr']").val();
+        		// console.log(search);
+       		if(reg.test(search)){
+	               var newArray = new Array();
+	               var searchStr =  new RegExp(search,'i');
+	               var searchArray = new Array();
+	               $("#content tr").each(function(index,value){
+	                   var title =  $(this).children("td:eq(1)").html();
+	                   var id =  $(this).attr("tree_data_id");
+	                   var pid = $(this).attr("tree_pid");
+	                   if(searchStr.test(title) == true){
+	                       if($.inArray(pid,newArray)==-1) {
+	                           newArray.push(pid);
+	                       }
+	                       // $(this).children("td:eq(1)").html(
+	                       //         title.replace(searchStr,'<span id="searchbackground" style="background: red">'+search+'</span>')
+	                       // );
+	                       searchArray.push(id);
+	                   }
+	               });
+	               $("#content tr").each(function(index,value){
+		                var id = $(this).attr("tree_data_id");
+		                if($.inArray(id,newArray) !== -1 || $.inArray(id,searchArray) !== -1) {
+		                    $(this).show();
+		                	var pid = $(this).attr("tree_pid");
+		                    if(pid != "0"){
+		                    	var showpid = 'tree_data_id' + pid;
+		                    	$("#" + showpid).show();
+		                    }
+                		}
+            		});
+	           }else{
+       		        var treeOpen = "{$treeOpen}";
+       		        // console.log(treeOpen);
+       		        if(treeOpen){
+                        $("#content tr").show();//展开所有树
+                    }else{
+                        $(".tree_pid0").show();//只显示顶级
+                    }
+	       			// layer.msg("没有查询内容");
+	                return false;
+	           }
+          });
+    });
+</script>
+{/block}

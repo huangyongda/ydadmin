@@ -1,0 +1,66 @@
+<a id="btn_ajax_api_debug" target="_blank" href="javascript:;" style="position: fixed;
+z-index: 19940201; right: 0;bottom: 20px;"></a>
+<a id="btn_api_debug" onclick="show_api_debug_info();" href="javascript:;" style="position: fixed;
+z-index: 19940201;
+{gt name="ajax" value="0"} left: 0;top: 0; font-size:14px; {else/} right: 0;bottom: 0; {/gt}
+color: {gt name="runtime" value="1"} #ff0000  {else/}   #00DD00 {/gt}   ">
+运行时间:{$runtime}</a>
+<script>
+    function show_api_debug_info(){
+        document.getElementById("api_debug_info").style.display="block";
+    }
+    function hide_api_debug_info(){
+        document.getElementById("api_debug_info").style.display="none";
+    }
+
+    function show_origin_content(content_id){
+        document.getElementById("origin_content_"+content_id).style.display="block";
+        document.getElementById("json_content_"+content_id).style.display="none";
+    }
+    function show_json_content(content_id){
+        document.getElementById("origin_content_"+content_id).style.display="none";
+        document.getElementById("json_content_"+content_id).style.display="block";
+    }
+</script>
+<div id="api_debug_info" style="display:none;position: fixed;top:0;left:0;background: #fff;overflow: auto;height: 100%;
+width: 100%;padding: 0;margin: 0;z-index: 19940201;">
+
+    <a  onclick="hide_api_debug_info();" href="javascript:;" style="position: fixed;color: #ffffff;
+    top: 0;right: 0;margin-right:30px;padding:5px 10px;z-index: 19940201;background: #ff0000;">关闭</a>
+    {volist name="debug_log" key="key" id="vo"}
+    <div style="overflow: hidden;">
+        <div style="width: 49.5%;float: left;border: 1px solid #dedede;">
+            <div style="padding: 10px;">
+                <p style="font-size: 12px;padding: 10px 0;"><b>Api名称:</b>{$vo.ApiName}</p>
+                <p style="font-size: 12px;padding: 10px 0;
+                color: {gt name="vo.apiRequestTime" value="1"} #ff0000 {else/} #00DD00 {/gt}  ">
+                <b>api执行时间:</b>{$vo.apiRequestTime}</p>
+                <p style="font-size: 12px;padding: 10px 0;"><b>请求Url:</b>{$vo.requestUrl}</p>
+                <p style="font-size: 12px;padding: 10px 0;
+                color: {egt name="vo.responseHttpStatusCode" value="500"} #ff0000 {else/} #00DD00 {/egt}  ">
+                <b>返回状态码:</b>{$vo.responseHttpStatusCode}</p>
+                <p style="font-size: 12px;padding: 10px 0;"><b>post数据:</b>{$vo.post}</p>
+                <p style="font-size: 12px;padding: 10px 0;"><b>字符串:</b>{$vo.string}</p>
+            </div>
+
+        </div>
+        <div style="width: 49.5%;float: right;border: 1px solid #dedede;">
+            返回内容
+            <a href="javascript:;" onclick="show_origin_content('{$vo.id}')" style="background: black;color: #ffffff;padding: 3px 6px">接口返回原始内容</a>
+            <a href="javascript:;" onclick="show_json_content('{$vo.id}')"   style="background: black;color: #ffffff;padding: 3px 6px">json转换为数组</a>
+            <div id="origin_content_{$vo.id}">
+                {$vo.return}
+
+            </div>
+
+            <div id="json_content_{$vo.id}" style="display: none">
+
+                <pre style="overflow: auto">{$vo.return_json}</pre>
+
+            </div>
+
+        </div>
+    </div>
+
+    {/volist}
+</div>

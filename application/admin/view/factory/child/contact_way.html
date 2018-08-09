@@ -1,0 +1,67 @@
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">联系方式
+        </h3>
+        <div class="layui-field-box">
+            <table class="layui-table">
+                <tbody>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">Email地址：</td>
+                    <td style="text-align: center;">
+                        <if condition="isset($factory_list.email) &&  $factory_list.email neq ''">
+                            {$factory_list.email}
+                            <else />
+                           \
+                        </if>
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">电话：</td>
+                    <td style="text-align: center;">
+                        <if condition="isset($factory_list.tel) &&  $factory_list.tel neq ''">
+                            {$factory_list.tel}
+                            <else />
+                            \
+                        </if>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">负责人手机号：</td>
+                    <td style="text-align: center;">
+                        <if condition="isset($factory_list.management) &&  $factory_list.tel management ''">
+                            {$factory_list.management}
+                            <else />
+                            \
+                        </if>
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">客服联系手机：</td>
+                    <td style="text-align: center;">
+                        <if condition="isset($factory_list.custom_phone) && $factory_list.custom_phone neq ''">
+                            {$factory_list.custom_phone}
+                            <else />
+                            \
+                        </if>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">客服座机：</td>
+                    <td style="text-align: center;">
+                        <if condition="$factory_list.custom_tel neq '' && isset($factory_list.custom_tel)">
+                            {$factory_list.custom_tel}
+                            <else />
+                            \
+                        </if>
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">技术联系手机：</td>
+                    <td style="text-align: center;">
+                        <if condition="$factory_list.tag_phone neq '' && isset($factory_list.tag_phone)">
+                            {$factory_list.tag_phone}
+                            <else />
+                            \
+                        </if>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</li>

@@ -1,0 +1,37 @@
+<!-- 服务类别 -->
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">所属权限
+            <!--{if condition="isset($pageType) && $pageType == 0"}-->
+            <!--<button class="layui-btn layui-btn-primary layui-btn-mini editInfo"-->
+                    <!--request-url="{:url('punishKinds',['uid'=>$userInfo['baseInfo']['id']])}"-->
+                    <!--title="修改">-->
+                <!--<i class="layui-icon"></i>-->
+            <!--</button>-->
+            <!--{/if}-->
+        </h3>
+        <table class="layui-table">
+            <thead><tr><th>所属权限</th></tr></thead>
+            <tbody>
+            <tr>
+                <td style="text-align: center;" >
+                    {volist name="$authorityList" id="vo"}
+                        <?php
+                            $voMenu =  explode(',',$vo['menu']);
+                        ?>
+                        {volist name="$voMenu" id="v"}
+                            <div style="margin-bottom: 5px;display:inline-block;">
+                                    <span class="layui-badge {$vo.isDisable?'layui-bg-gray':'layui-bg-green'}"
+                                          style="padding: 3px 4px;">
+                                        {$v}
+                                    </span>
+                            </div>
+                        {/volist}
+                    {/volist}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</li>

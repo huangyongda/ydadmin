@@ -1,0 +1,36 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+
+{block name="foot"}
+<script>
+    layui.use(['form', 'layedit', 'laydate','upload'], function() {
+        var form = layui.form(),
+                layer = layui.layer,
+                laydate = layui.laydate;
+        var $ = layui.jquery;
+        $("input[name=cash_apply_check_log]").css("color","red");
+        $("input[name=cash_apply_check_log]").css("width","500px");
+        $("input[name=cash_apply_check_log]").click(function(){
+            layer.confirm('是否监测该账号?', {icon: 3, title:'监测'},function(index){
+                var id = $("input[name=uid]").val();
+                var url = "{:url('FactoryFinance/check_uid')}";
+                $.ajax({
+                    url:url,
+                    type:'post',
+                    dateType:'json',
+                    data:{id:id},
+                    success:function(data)
+                    {
+                        parent.layer.msg(data.msg, {icon: 6, time: 3000});
+                    }
+
+                });
+                layer.close(index);
+            });
+        });
+        $(":input").attr("readonly", true);
+        $(":button").hide();
+    });
+</script>
+{/block}

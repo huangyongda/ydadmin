@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="__STATIC__/layui/plugins/layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="__STATIC__/layui/css/main.css" />
+</head>
+
+<body>
+<div class="admin-main">
+    <blockquote class="layui-elem-quote">
+        <p>API调试工具 <a href="{:url("admin/ApiTool/index")}" target="_blank">{:url("admin/ApiTool/index")}</a></p>
+
+        <br>
+        <p>前端树形列表demo地址（默认不展开效果） <a href="{:url('admin/Demo/tree')}" target="_blank">{:url("admin/Demo/tree")}</a></p>
+        <p>前端树形列表demo地址（默认展开1层效果） <a href="{:url('admin/Demo/treeopen')}" target="_blank">{:url("admin/Demo/treeopen")}</a></p>
+        <p>前端树形列表demo地址（默认全部展开效果） <a href="{:url('admin/Demo/treeopenall')}" target="_blank">{:url("admin/Demo/treeopenall")}</a></p>
+        <br>
+        <p>前端列表demo地址 <a href="{:url('admin/Demo/index')}" target="_blank">{:url("admin/Demo/index")}</a></p>
+        <p>前端简单列表demo地址 <a href="{:url('admin/Demo/index2')}" target="_blank">{:url("admin/Demo/index2")}</a></p>
+        <br>
+        <p>前端表单更新demo地址 <a href="{:url('admin/demo/update',array('id'=>1))}" target="_blank">{:url('admin/demo/update',array('id'=>1))}</a></p>
+        <p>前端表单添加demo地址 <a href="{:url('admin/demo/add')}" target="_blank">{:url('admin/demo/add')}</a></p>
+
+
+    </blockquote>
+
+</div>
+</body>
+<script>
+    function openNewTab() {
+        if(parent.tab){
+            parent.tab.tabAdd({href:"/admin/Remotefeeconfig/fee_manage.html",icon:"fa-cubes",title:"区域远程费管理"});
+        }else{
+            window.open("/admin/Remotefeeconfig/fee_manage.html")
+        }
+    }
+
+
+</script>
+</html>

@@ -1,0 +1,62 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+{block name="tpl_content"}
+<style>
+    .price{
+        margin: 5px;
+        padding: 5px;
+    }
+</style>
+<!--模板-->
+<script type="text/html" id="tpl">
+    {{# layui.each(d.list, function(index, item){ }}
+    <tr>
+        {foreach $columnsConfig as $val}
+        {php}if($val[0]=='name'){{/php}
+        <td >
+            <div class="price">
+                <span>{{ item.{$val[0]}.name }}</span>
+            </div>
+            <div class="price">
+                <span style="color: #1AA094">单位:&nbsp;&nbsp;&nbsp;&nbsp;{{item.{$val[0]}.uom}}</span>
+            </div>
+            {php} if($type=='1'){ {/php}
+            <div class="price">
+                <span style="color:darksalmon">关联配件:&nbsp;&nbsp;&nbsp;&nbsp;{{item.{$val[0]}.title}}</span>
+            </div>
+            {php} } {/php}
+            <div class="price">
+                <a href="javascript:;" class=" layui-btn-normal  layui-btn layui-btn-mini pj_btn" data-url="/~hewj/FOUR_CUG_PHP_CORE/public/admin/customer_complaints/editComplaintsReason/id/118.html" data-btnname="修改" data-opentype="Pop"><i class="fa "> </i>  添加价格</a>
+            </div>
+            <div class="price">
+                <span ><a href="javascript:;" class=" layui-btn-danger  layui-btn layui-btn-mini pj_btn" data-url="" data-btnname="删除" data-opentype="Ajax" data-confirm-text="确定删除本配件?" data-confirm-ico="3"><i class="fa "> </i>  删除</a></span>
+            </div>
+        </td>
+        {php}}{/php}
+        {php}if($val[0]=='price'){{/php}
+        <td >
+        {{# layui.each(item.{$val[0]},function(k,v){ }}
+           <div class="price">
+               <span style="color: red">价格:{{ v.price }}&nbsp;&nbsp;&nbsp;&nbsp; </span>
+               <span style="color: #1b6d85">公共属性:&nbsp;&nbsp;&nbsp;&nbsp;{{v.pub_attr}}</span>
+               {{# if(v.pri_attr){ }}
+               <span style="color: #01AAED">私有属性:&nbsp;&nbsp;&nbsp;&nbsp;{{v.pri_attr}} </span>
+               {{#  } }}
+               {php}
+               $url = Url('KindsManagement/deletePrice');
+               $lent = strlen($url);
+               $strpos = strpos($url,'.html');
+               $url = substr($url,-$lent,$strpos).'/fitting_price_id/';
+               {/php}
+               <span ><a href="javascript:;" class=" layui-btn-danger  layui-btn layui-btn-mini pj_btn" data-url="{$url}{{v.id}}" data-btnname="删除" data-opentype="Ajax" data-confirm-text="确定删除当前品类?" data-confirm-ico="3"><i class="fa "> </i>  删除</a></span>
+           </div>
+        {{# }) }}
+        </td>
+        {php}}{/php}
+        {/foreach}
+
+    </tr>
+
+    {{# }); }}
+</script>
+{/block}

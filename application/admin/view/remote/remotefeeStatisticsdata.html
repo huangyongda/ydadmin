@@ -1,0 +1,16 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+
+
+{// 页面异步提交成功之后 }
+{block name="foot"}
+<script>
+    layui.use(['form', 'layedit', 'laydate','upload'], function() {
+        var form = layui.form(),
+                layer = layui.layer,
+                laydate = layui.laydate;
+        var $ = layui.jquery;
+        $(":button").remove();
+    });
+</script>
+{/block}

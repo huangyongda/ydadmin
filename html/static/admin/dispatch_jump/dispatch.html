@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="__STATIC__/layui/plugins/layui/css/layui.css?v=12" media="all" />
+    <link rel="stylesheet" href="__STATIC__/layui/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__STATIC__/admin/dispatch_jump/css/dispathch_jump.css?v=2018-7-9" >
+    <!--<script type="text/javascript" src="__STATIC__/layui/plugins/layui/layui.js"></script>-->
+</head>
+<body>
+    <div class="vc">
+        <div class="vci">
+            <div class="content">
+                <?php switch ($code) {?>
+                <?php case 1:?>
+                <!--<p class="dir">提示信息</p>-->
+                <img src="__STATIC__/admin/dispatch_jump/images/success.png">
+                <p class="success"><?php echo(strip_tags($msg));?></p>
+                <?php break;?>
+                <?php case 0:?>
+                <!--<p class="dir">提示信息</p>-->
+                <img src="__STATIC__/admin/dispatch_jump/images/error.png">
+                <p class="error"><?php echo(strip_tags($msg));?></p>
+                <?php break;?>
+                <?php } ?>
+
+                <p class="link" id="link">系统将在<b id="wait"><?php echo($wait);?></b>秒后跳转</p>
+                <a  id="href" href="<?php echo($url);?>">点击这里</a>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+
+    (function()
+    {
+        var wait = document.getElementById('wait'),href = document.getElementById('href').href;
+        if(parent.tab){
+            var child=document.getElementById("link");
+            child.parentNode.removeChild(child);
+        }else{
+            var interval = setInterval(function()
+            {
+                var time = --wait.innerHTML;
+                if(time == 0)
+                {
+                    location.href = href;
+                    clearInterval(interval);
+                };
+            }, 1000);
+        }
+    })();
+
+</script>
+</html>

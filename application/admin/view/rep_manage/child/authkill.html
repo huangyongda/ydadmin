@@ -1,0 +1,66 @@
+<!-- 服务类别 -->
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">服务类别
+            {if condition="isset($pageType) && $pageType == 0"}
+                <button class="layui-btn layui-btn-primary layui-btn-mini editInfo"
+                        request-url="{:url('punishKinds',['uid'=>$userInfo['baseInfo']['id']])}"
+                        title="修改">
+                    <i class="layui-icon"></i>
+                </button>
+            {/if}
+        </h3>
+        <table class="layui-table">
+            <thead><tr><th>服务类别</th></tr></thead>
+            <tbody>
+            <tr>
+                <td style="text-align: center;" >
+                    {volist name="$userInfo['authkill']" id="vo"}
+                    <div style="margin-bottom: 5px;display:inline-block;">
+                            <span class="layui-badge {$vo.isDisable?'layui-bg-gray':'layui-bg-green'}"
+                                  style="padding: 3px 4px;">
+                                {$vo.skillName}
+                            </span>
+                    </div>
+                    {/volist}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        {notempty name="$userInfo['kindPunish']"}
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th style="text-align: center;">ID</th>
+                <th style="text-align: center;">处罚人</th>
+                <th style="text-align: center;">处罚对象</th>
+                <th style="text-align: center;">处罚品类</th>
+                <th style="text-align: center;">开始时间</th>
+                <th style="text-align: center;">结束时间</th>
+                <th style="text-align: center;">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="$userInfo['kindPunish']" id="vo"}
+            <tr>
+                <td style="text-align: center;" >{$vo.id}</td>
+                <td style="text-align: center;" >{$vo.name}</td>
+                <td style="text-align: center;" >{$vo.realname}</td>
+                <td style="text-align: center;" >{$vo.title}</td>
+                <td style="text-align: center;" >{$vo.start_time}</td>
+                <td style="text-align: center;" >{$vo.end_time}</td>
+                <td style="text-align: center;" >
+                    <button class="layui-btn layui-btn-mini  layui-btn-danger delete"
+                            request-url="{:url('delPunishKinds',['uid'=>$userInfo['baseInfo']['id']])}"
+                            pid="{$vo.skillID}">
+                        删除
+                    </button>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        {/notempty}
+    </div>
+</li>

@@ -1,0 +1,90 @@
+<!--跟进记录-->
+<div class="layui-tab layui-tab-brief trackingRecord" lay-filter="docDemoTabBrief" style="margin: 20px;display: none">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>跟进记录</legend>
+    </fieldset>
+    <ul class="layui-tab-title">
+        <li class="layui-this">跟进记录(公共）</li>
+        <li>跟进记录 (客服私有)</li>
+    </ul>
+    <div class="layui-tab-content" style="height:auto;">
+        <div class="layui-tab-item layui-show">
+            <div class="grid-demo grid-demo-bg1">
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                <legend>跟进记录(公共)</legend>
+            </fieldset>
+            <ul class="layui-timeline">
+                {volist name="info.public" id="vo"}
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">{$vo.time}</h3>
+                        <ul>
+                            <li>{$vo.role_name}:{$vo.realname}</li>
+                            <li>{$vo.content}</li>
+                        </ul>
+                    </div>
+                </li>
+                {/volist}
+            </ul>
+                {if condition="$info['status'] eq 2"}
+            <div style="margin: 8px;">
+                <form class="layui-form-message-public layui-form-pane" action="">
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">跟进记录(公共留言)</label>
+                        <div class="layui-input-block">
+                            <textarea placeholder="请输入内容" name="content" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-item">
+                            <button class="layui-btn" lay-submit="" lay-class="layui-form-message-public" lay-url="{:url('addComplaintNewFlow','wid='.$info['wid'].'&public=1')}"  lay-filter="message">留言提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+                {/if}
+
+        </div>
+        </div>
+
+        <div class="layui-tab-item"> <div class="grid-demo grid-demo-bg1">
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+                <legend>跟进记录(私有)</legend>
+            </fieldset>
+            <ul class="layui-timeline">
+                {volist name="info.private" id="vo"}
+                <li class="layui-timeline-item">
+                    <i class="layui-icon layui-timeline-axis"></i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">{$vo.time}</h3>
+                        <ul>
+                            <li>{$vo.role_name}:{$vo.realname}</li>
+                            <li>{$vo.content}</li>
+                        </ul>
+                    </div>
+                </li>
+                {/volist}
+            </ul>
+            {if condition="$info['status'] eq 2"}
+            <div style="margin: 8px;">
+                <form class="layui-form-message-private layui-form-pane" action="">
+                    <div class="layui-form-item layui-form-text">
+                        <label class="layui-form-label">跟进记录(私有留言)</label>
+                        <div class="layui-input-block">
+                            <textarea placeholder="请输入内容" name="content" class="layui-textarea"></textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-item">
+                            <button class="layui-btn" lay-submit="" lay-class="layui-form-message-private" lay-url="{:url('addComplaintNewFlow','wid='.$info['wid'].'&public=0')}" lay-filter="message">留言提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {/if}
+        </div>
+        </div>
+    </div>
+</div>
+

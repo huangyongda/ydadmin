@@ -1,0 +1,98 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+{block name="header"}
+<style>
+    td {
+        text-align:center;
+    }
+    .admin-table th{
+        text-align:center;
+    }
+</style>
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+    <legend>当前套餐:{$pack_info['name']}</legend>
+</fieldset>
+<div>
+    {volist name="kinds" id="vo"}
+    <a href="{:Url('ProductPrice/index',['kid'=>$vo.id,'pack'=>$pack])}">
+        <button class="layui-btn layui-btn-radius {if condition='$kid eq $vo.id'}layui-btn-radius{else/} layui-btn-primary{/if}" style="margin: 3px;">{$vo.title}</button>
+    </a>
+    {/volist}
+</div>
+{/block}
+{block name="tpl_content"}
+<!--模板-->
+<script type="text/html" id="tpl">
+    {php}
+    function getUrl($url){
+    $lent = strlen($url);
+    $strpos = strpos($url,'.html');
+    $url = substr($url,-$lent,$strpos);
+    return $url;
+    }
+    $propatt = Url('ProductPrice/editPattern',['kid'=>$kid]);
+    $propatt_url = getUrl($propatt).'/propatt_id/';
+    $cat = Url('ProductPrice/edit',['kid'=>$kid]);
+    $cat_url = getUrl($cat).'/cat_id/';
+    {/php}
+    {{# layui.each(d.list, function(index, item){ }}
+    <tr>
+        {notempty name='BatchBtn'}
+        <td>
+            <input type="checkbox" lay-skin="primary" value="{notempty name='BatchKey'} {{ item.{$BatchKey} }} {/notempty}">
+        </td>
+        {/notempty}
+        {foreach $columnsConfig as $val}
+        {php}if($val[0]=='data'){{/php}
+        {{# var attr_data = item.data }}
+        {{# layui.each(attr_data.attr,function(k,v){ }}
+    <tr>
+        <td rowspan="{{ v.count }}">
+                        <span  class="layui-show">
+                            <a href="javascript:;" class=" layui-btn layui-btn-mini pj_btn" data-url="{$propatt_url}{{ v.propatt_id }}"
+                               data-BtnName="型号编辑"  data-OpenType="Pop"><i class="fa "> </i>型号:{{ v.attr }}</a>
+                        </span>
+        </td>
+        <td  rowspan="{{ v.count }}">
+            <span  class="layui-show">
+                            <a href="javascript:;" class=" layui-btn layui-btn-mini pj_btn" data-url="{$propatt_url}{{ v.propatt_id }}"
+                               data-BtnName="型号编辑"  data-OpenType="NewTab"><i class="fa "> </i>选择套餐类型</a>
+                        </span>
+        </td>
+        <td  rowspan="{{ v.count }}">
+            <span  class="layui-show">
+                            <a href="javascript:;" class="layui-btn layui-btn-mini layui-btn-danger pj_btn" data-url="{$propatt_url}{{ v.propatt_id }}"
+                               data-BtnName="型号编辑"  data-OpenType="NewTab"><i class="fa "> </i>禁用</a>
+                        </span>
+        </td>
+        <td  rowspan="{{ v.count }}">
+            <span  class="layui-show">
+                          {{ v.attr_per }}
+                        </span>
+        </td>
+
+
+    {{# layui.each(attr_data.list,function(key,value){ }}
+        <td>{{ value.title }}</td>
+        <td>{{ value.order_type }}</td>
+        <td>{{ value.fitting }}</td>
+        <td>{{ value.nofitting }}</td>
+        <td>{{ value.price }}</td>
+        <td>{{ value.baowai_price }}</td>
+        <td>
+            <a href="javascript:;" class=" layui-btn layui-btn-mini pj_btn" data-url="{$cat_url}{{ value.cat_id }}"
+               data-BtnName="编辑" data-OpenType="NewTab"><i class="fa "></i>编辑</a>
+        </td>
+    </tr>
+    {{# }); }}
+    {{# }); }}
+    {{# }); }}
+    {php}}{/php}
+    {/foreach}
+</script>
+{/block}
+
+<!--{block name="page_ajax_success_af"}-->
+<!--var html = "<span>当前品类</span>"-->
+<!--$("#from_head").append(html);-->
+<!--{/block}-->

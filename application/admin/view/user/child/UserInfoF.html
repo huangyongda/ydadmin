@@ -1,0 +1,205 @@
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">基本资料
+        </h3>
+        <div class="layui-field-box">
+            <table class="layui-table">
+                <tbody>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">用户名：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.account}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">账号状态：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.user_status_str}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">是否属于子帐号：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.pid_str}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">账号审核状态：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.user_status_str}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">最后登录ip：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.lastlogin_ip}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">最后登录时间：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.lastlogin_time}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">E-mail：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.email}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">真实姓名：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.realname}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">注册时间：</td>
+                    <td style="text-align: center;">
+                        {if condition="strtotime($userInfo.register_time) <=0"}
+                        /
+                        {else /}
+                        {$userInfo.register_time}
+                        {/if}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">账号类型：</td>
+                    <td style="text-align: center;">
+                        后台用户
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">用户角色：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.role_name}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">联系方式：</td>
+                    <td style="text-align: center;">
+                        {$userInfo.tel}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">企业名称：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.company eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.company}
+                        {/if}
+
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">负责人名称：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.management eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.management}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">负责人手机号码：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.manage_phone eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.manage_phone}
+                        {/if}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">客服联系手机：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.custom_phone eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.custom_phone}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">客服联系座机：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.custom_tel eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.custom_tel}
+                        {/if}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">财务联系方式：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.finance_phone eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.finance_phone}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">技术联系手机：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.tag_phone eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.tag_phone}
+                        {/if}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">推广人：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.promotion eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.promotion}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">维修单量：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.r_num eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.r_num}
+                        {/if}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">安装单量：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.s_num eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.s_num}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">送修单量：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.h_num eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.h_num}
+                        {/if}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">可用余额：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.able_money eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.able_money}
+                        {/if}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;" class="layui-bg-gray" width="25%">冻结金额：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.freeze_money eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.freeze_money}
+                        {/if}
+                    </td>
+                    <td style="text-align: center;" class="layui-bg-gray" width="20%">保证金金额：</td>
+                    <td style="text-align: center;">
+                        {if condition="$userInfo.bond_money eq '' "}
+                            ＼
+                            {else /}
+                            {$userInfo.bond_money}
+                        {/if}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</li>

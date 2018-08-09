@@ -1,0 +1,27 @@
+<!-- 银行账户信息 -->
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">银行账户信息</h3>
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th style="text-align: center;">开户行</th>
+                <th style="text-align: center;">开户名</th>
+                <th style="text-align: center;">开户行地址</th>
+                <th style="text-align: center;">银行帐号</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="$userInfo['bankInfo']" id="vo"}
+            <tr>
+                <td style="text-align: center;" >{$vo.bankname}</td>
+                <td style="text-align: center;">{$vo.bankcardname}</td>
+                <td style="text-align: center;" >{$vo.address}</td>
+                <td style="text-align: center;" >{$vo.bankcardnum}</td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+    </div>
+</li>

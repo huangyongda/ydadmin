@@ -1,0 +1,363 @@
+{// 模板继承 }
+{extend name="$tableTplPath" /}
+
+{block name="tree_top_content"}
+<style>
+    #content{display: none}
+</style>
+<blockquote class="layui-elem-quote" style="background: none;">
+{eq name="showTreeOpenOrCloseBtn" value="1"}
+        <a href="javascript:;" class="  layui-btn-normal   layui-btn layui-btn-small open_tree_btn">
+            <i class="fa fa-toggle-down"> </i> 全部展开
+        </a>
+        <a href="javascript:;" class="   layui-btn-normal  layui-btn layui-btn-small close_tree_btn">
+            <i class="fa fa-toggle-up"> </i> 全部不展开
+        </a>
+{/eq}
+
+{eq name="searchInput" value="1"}
+    <div class="layui-input-inline">
+        <label class="layui-form-label">搜索</label>
+        <div class="layui-input-inline">
+            <input type="text" name="selectStr" autocomplete="" value="" placeholder="" class="layui-input" id="JsSelectStr">
+        </div>
+    </div>
+{/eq}
+</blockquote>
+{/block}
+{php}   if(!isset($searchInput)){ $searchInput=""; }   {/php}
+
+{block name="tbody_content"}
+{volist name='dataSource' id='vo'}
+
+<tr tree_data_id="{$vo[$treePrimaryKey]}" tree_pid="{$vo[$treePidName]}"
+    id="tree_data_id{$vo[$treePrimaryKey]}" class="tree_pid{$vo[$treePidName]}" tree_level="{$vo.cur_tree_level}"  >
+    {notempty name='BatchBtn'}
+    <td>
+        <input type="checkbox" lay-skin="primary" value="{notempty name='BatchKey'} {{ item.{$BatchKey} }} {/notempty}">
+    </td>
+    {/notempty}
+
+    {foreach $columnsConfig as $val}
+    <td>
+        {eq name="treeField" value="$val[0]" }
+
+        <i class="layui-icon layui-xtree-icon-null"
+           style="position: relative; top: 3px; margin: 0px 5px 0px {$vo.cur_tree_level*45}px; font-size: 18px; color: rgb(0, 0, 0);">
+            <i class="fa  {notempty name="vo.cur_tree_has_son"} fa-toggle-down cur_tree_has_son {else /} fa-sticky-note-o {/notempty} " aria-hidden="true"
+             data_id="{$vo[$treePrimaryKey]}"
+            ></i>
+        </i>
+        <!--<i class="fa fa-etsy" aria-hidden="true"></i>-->
+        {/eq}
+        {if condition="($treeField == $val[0])"}
+        <span class="treeField">
+            {$vo[$val[0]]}
+        </span>
+        {else /}
+            {$vo[$val[0]]}
+        {/if}
+    </td>
+    {/foreach}
+    {if condition=" $ConlumnsBtn "}
+    <td>
+        {$ConlumnsBtn}
+    </td>
+    {/if}
+
+</tr>
+{/volist}
+{/block}
+
+
+
+
+
+{block name="paging_init"}
+
+$("#content .pj_btn").on('click', function () {
+pj_btn_click($(this));
+});
+
+
+
+{/block}
+
+
+{block name="treefoot"}
+<script>
+    layui.use(['form'], function() {
+        var $ = layui.jquery;
+        var form = layui.form();
+        $("#content .cur_tree_has_son").on('click', function () {
+            var id=$(this).parents("tr").attr("tree_data_id");
+            if($(this).hasClass("fa-toggle-down")){
+                close_tree(id);
+            }
+            else{
+                open_tree(id,1);
+            }
+        });
+
+        form.render('checkbox');
+        form.on('checkbox(allselector)', function(data) {
+            var elem = data.elem;
+
+            $('#content').children('tr').each(function() {
+                var $that = $(this);
+                //全选或反选
+                var $cbx = $that.children('td').eq(0).children('input[type=checkbox]')[0];
+                if($cbx == undefined) {
+                    return true;
+                }
+                $cbx.checked = elem.checked;
+                form.render('checkbox');
+            });
+        });
+
+        /**
+         * 收起树
+         * @param data_id
+         */
+        function close_tree(data_id){
+            //旧版写法 性能比较差
+//            $("#content #tree_data_id"+data_id).find(".cur_tree_has_son").removeClass("fa-toggle-down")
+//                .addClass("fa-toggle-up");
+//            $("#content .tree_pid"+data_id).each(function () {
+//                close_tree($(this).attr("tree_data_id"));
+//                $(this).hide();
+//            });
+
+            var open_tree_dom=$("#content #tree_data_id"+data_id);
+            open_tree_dom.find(".cur_tree_has_son").removeClass("fa-toggle-down").addClass("fa-toggle-up");
+
+
+            var tree_level=open_tree_dom.attr("tree_level");
+            if(open_tree_dom.length<0){
+                tree_level=0;
+            }
+            var next_dom=open_tree_dom;
+            for(;;){
+                next_dom=next_dom.next("tr");
+                var cur_tree_level=next_dom.attr("tree_level");
+                if(next_dom.length>0 && cur_tree_level>tree_level){
+                    next_dom.hide();
+                    next_dom.find(".cur_tree_has_son").removeClass("fa-toggle-down").addClass("fa-toggle-up");
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+        }
+
+        $("#content .tree_pid{$pid_origin_value}").each(function () {
+            close_tree($(this).attr("tree_data_id")  );
+        });
+        if("{$treeOpen}"){ //只显示1层
+            $("#content .tree_pid{$pid_origin_value}").each(function () {
+                open_tree($(this).attr("tree_data_id") {gt name="treeOpenLevel" value="0"} , {$treeOpenLevel} {/gt}   );
+            });
+        }
+
+        $("#content").show();
+
+        /**
+         * 展开树
+         * @param data_id 展开的id
+         * @param level 展开多少级数  默认表示展开无限级
+         */
+        function open_tree(data_id,level){
+              //旧版写法  性能比较差
+//            if(typeof (level) !== "undefined" && level<=0){ //undefined表示展开无限级
+//                return true;
+//            }
+//            var open_tree_dom=$("#content #tree_data_id"+data_id);
+//            open_tree_dom.find(".cur_tree_has_son").removeClass("fa-toggle-up").addClass("fa-toggle-down");
+//            $("#content .tree_pid"+data_id).each(function () {
+//                open_tree($(this).attr("tree_data_id"),(typeof (level) === "undefined" ?level : level-1) );
+//                $(this).show();
+//            });
+
+            var open_tree_dom=$("#content #tree_data_id"+data_id);
+            open_tree_dom.find(".cur_tree_has_son").removeClass("fa-toggle-up").addClass("fa-toggle-down");
+
+
+            var tree_level=open_tree_dom.attr("tree_level");
+            if(open_tree_dom.length<0){
+                tree_level=0;
+            }
+            var next_dom=open_tree_dom;
+            for(;;){
+                next_dom=next_dom.next("tr");
+                var cur_tree_level=next_dom.attr("tree_level");
+
+                if(next_dom.length<=0 || cur_tree_level<=tree_level){
+                    return true;
+                }
+                var dom_show=false;//dom节点是否展示
+                var tree_open=true;//树图标是否打开
+                //展开无限级
+                if(next_dom.length>0 && cur_tree_level>tree_level && typeof (level) === "undefined" ){ //undefined表示
+                    dom_show=true;
+                }
+
+
+                //指定展开几级
+                if(next_dom.length>0 && cur_tree_level>tree_level && typeof (level) !== "undefined" && level>0 ){ //undefined表示展开无限级
+                    if(parseInt(cur_tree_level) < parseInt(tree_level) + parseInt(level) ){
+                        dom_show=true;
+                    }
+                    if(parseInt(cur_tree_level) == parseInt(tree_level) + parseInt(level) ){
+                        tree_open=false;
+                        dom_show=true;
+                    }
+                }
+                if(dom_show){
+
+                    next_dom.show();
+                }
+                else{
+
+                    next_dom.hide();
+                }
+                if(tree_open){
+                    next_dom.find(".cur_tree_has_son").removeClass("fa-toggle-up").addClass("fa-toggle-down");
+                }
+                else{
+                    next_dom.find(".cur_tree_has_son").removeClass("fa-toggle-down").addClass("fa-toggle-up");
+                }
+            }
+
+        }
+
+        $(".open_tree_btn").click(function () {
+            var date1=new Date();  //开始时间
+
+            $("#content .tree_pid{$pid_origin_value}").each(function () {
+                open_tree($(this).attr("tree_data_id"));
+            });
+            var date2=new Date();    //结束时间
+            var date3=date2.getTime()-date1.getTime();  //时间差的毫秒数
+//            console.log("执行时间"+date3);
+        });
+
+        $(".close_tree_btn").click(function () {
+            var date1=new Date();  //开始时间
+            $("#content .tree_pid{$pid_origin_value}").each(function () {
+                close_tree($(this).attr("tree_data_id")  );
+            });
+            var date2=new Date();    //结束时间
+            var date3=date2.getTime()-date1.getTime();  //时间差的毫秒数
+//            console.log("执行时间"+date3);
+        });
+        /*搜索js*/
+        var searchInput =  "{$searchInput}";
+        if(searchInput){
+            var result = hideSubsets(true);
+            //console.log(result);
+            /*隐藏非父集的*/
+            function hideSubsets(status){
+                var array = [];
+                //$("#content tr").hide();
+                if(status == false){
+                    $("#content tr").hide();
+                }
+                $("#content tr").each(function(index,value){
+                    var data = [];
+                    var pid   = $(this).attr('tree_pid')
+                    var id    = $(this).attr('tree_data_id');
+                    var title = $(this).find(".treeField").html();
+                    if(status == false){
+                        $(this).find(".treeField").css('color','');
+                        title = result[index]['title'];
+                        if(pid==0){
+                            $(this).css('display','');
+                        }
+                        $(this).find(".treeField").html(title);
+                    }
+                    data['title'] =  $.trim(title);
+                    data['pid'] =  $.trim(pid);
+                    data['id'] =  $.trim(id);
+                    array[index] =  data;
+                });
+                if(status ==true){
+                    return array;
+                }
+            }
+            /*搜索事件*/
+            $("#JsSelectStr").keyup(function(){
+                //alert(1);
+                hideSubsets(false);
+                var search =  $(this).val();
+                /*搜索条件为空就就初始化*/
+                if(search == ''){
+                    hideSubsets(false);
+                    return true;
+                }
+                var newArray = new Array();
+                var searchStr =  new RegExp(search,'i');
+                var searchArray = new Array();
+                $("#content tr").each(function(index,value){
+                    var title =  $(this).find(".treeField").text();
+                    var id =  $(this).attr('tree_data_id');
+                    var pid =  $(this).attr('tree_pid');
+                    if(searchStr.test(title) == true){
+                        if($.inArray(pid,newArray)==-1) {
+                            newArray.push(pid);
+                        }
+                        $(this).find(".treeField").css('color','red');
+                        searchArray.push(id);
+                        $(this).css('display','');
+                    }
+                });
+                if(searchArray.length == 0){
+                    hideSubsets(false);
+                    return true;
+                }
+                var ids = '';
+                for(var $i=0;$i<newArray.length;$i++){
+                    if(getArray(newArray[$i])!=''){
+                        if($i+1 == newArray.length){
+                            ids +=getArray(newArray[$i]);
+                        }else{
+                            ids +=getArray(newArray[$i])+',';
+                        }
+                    }
+                }
+                openParent($.unique(ids.split(',')),newArray);
+            })
+
+        }
+
+            function getArray(id){
+                var array = ''
+                $.each(result,function(index,value){
+                    if(value.id == id  && value.pid!=0){
+                        array += value.pid;
+                        var ids =  getArray(value.pid);
+                        if(ids!= '' ){
+                            array +=','+ids;
+                        }
+                    }
+                });
+                return array;
+            }
+
+            function openParent(array,array2){
+                $("#content tr").each(function(index,value){
+                    var id =   $(this).attr('tree_data_id');
+                    if($.inArray(id,array) !== -1 || $.inArray(id,array2) !== -1) {
+                        $(this).css('display','');
+                        console.log(
+                            $(this).find(".treeField").prev().children('i').removeClass('cur_tree_has_son fa-toggle-up').addClass("cur_tree_has_son fa-toggle-down")
+                        );
+                    }
+                });
+            }
+    });
+</script>
+
+{/block}
+

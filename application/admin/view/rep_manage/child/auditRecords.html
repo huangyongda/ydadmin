@@ -1,0 +1,63 @@
+<!-- 审核记录 -->
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">审核记录</h3>
+        {notempty name="$userInfo['auditRecord']"}
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th style="text-align: center;width:15%">审核人</th>
+                    <th style="text-align: center;width:20%">审核时间</th>
+                    <th style="text-align: center;width:10%">审核结果</th>
+                    <th style="text-align: center;width:15%">审核对象所属身份</th>
+                    <th style="text-align: center;width:20%">审核类型</th>
+                    <th style="text-align: center;">审核失败原因</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="$userInfo['auditRecord']" id="vo"}
+                <tr>
+                    <td style="text-align: center;" >{$vo.account}</td>
+                    <td style="text-align: center;" >{$vo.timeFormat}</td>
+                    <td style="text-align: center;" >{$vo.statusText}</td>
+                    <td style="text-align: center;" >{$vo.auditTypeText}</td>
+                    <td style="text-align: center;" >{$vo.checkStatusText}</td>
+                    <td style="text-align: center;" >{$vo.fail_reason}</td>
+                </tr>
+                {/volist}
+                </tbody>
+
+            </table>
+            <!-- 服务中心审核 -->
+            {if condition="isset($pageType) && $pageType == 1"}
+                <div class="layui-col-md4 layui-col-md-offset8">
+                    {if $userInfo.otherInfo.check_status == 1 || $userInfo.otherInfo.check_status == 7}
+                    <button class="layui-btn layui-btn-danger editInfo"
+                        request-url="{:url('RepServiceAudit/nonApproval',['uid'=>$userInfo['baseInfo']['id']])}"
+                        title="审核不通过">
+                    审核不通过</button>
+
+                    <button class="layui-btn layui-btn-normal editInfo"
+                            request-url="{:url('RepServiceAudit/approval',['uid'=>$userInfo['baseInfo']['id']])}"
+                            title="审核通过">审核通过</button>
+                    {/if}
+                </div>
+            {/if}
+        {/notempty}
+        <!-- 新注册用户审核 -->
+        {if condition="isset($pageType) && $pageType == 2"}
+        <div class="layui-col-md4 layui-col-md-offset8">
+            {if $userInfo.baseInfo.user_status == 0 || $userInfo.baseInfo.user_status == 2 || $userInfo.baseInfo.user_status == 7}
+            <button class="layui-btn layui-btn-danger editInfo"
+                    request-url="{:url('RepNewRep/approval',['uid'=>$userInfo['baseInfo']['id'],'userStatus'=>2])}"
+                    title="审核不通过">
+                审核不通过</button>
+            <button class="layui-btn layui-btn-normal editInfo"
+                    request-url="{:url('RepNewRep/approval',['uid'=>$userInfo['baseInfo']['id'],'userStatus'=>1])}"
+                    title="审核通过">审核通过</button>
+            {/if}
+        </div>
+        {/if}
+    </div>
+</li>

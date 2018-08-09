@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+  Options +FollowSymlinks -Multiviews
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^(.*)$ /~liuy/webcug2313/html/index.php/$1 [QSA,PT,L]  # 此处替换成自己的路径
+</IfModule>
+setEnv Web_Debug 1
+setEnv API_PROXY 192.168.11.103:8888   # 此处如果需要代理抓包替换成自己的ip和端口
+setEnv MEMCACHE_SERVER 192.168.10.250:11211  # 不动
+setEnv REDIS_SERVER 192.168.10.250:6379      # 不动
+setEnv Runtime_Path /home/liuy/runtime   # 此处是tp运行记录日志以及缓存的地方  需要替换成自己的指定的路径或者注释掉 不定义
+setEnv Base_Api http://php7.cug.com/~liuy/apicug2313/html/  # 此处需要替换自己的路径
+
+
+############
+###
+###
+###注意！，将本文件复制一份命名成 .htaccess 按照上面的提示修改成自己的环境即可
+###
+###
+#############

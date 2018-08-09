@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>{$title}</title>
+    <script src="__STATIC__/layui/js/jquery-1.10.2.js"></script>
+    <script src="__STATIC__/layui/js/jquery.fly.min.js"></script>
+    <link rel="stylesheet" href="__TPL__/plugins/layui/css/layui.css?s=99" media="all" />
+    <link rel="stylesheet" href="__TPL__/css/global.css" media="all">
+    <link rel="stylesheet" href="__TPL__/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__TPL__/css/table.css" />
+    <script type="text/javascript" src="__TPL__/plugins/layui/layui.js"></script>
+    {block name="head"}
+    {/block}
+</head>
+
+<body>
+{php}   if(!isset($search)){ $search=[]; }   {/php}
+{php}   if(!isset($columnsConfig)){ $columnsConfig=[]; }   {/php}
+{php}   if(!isset($HeaderBtn)){ $HeaderBtn=[]; }   {/php}
+{php}   if(!isset($BatchBtn)){ $BatchBtn=[]; }   {/php}
+{php}   if(!isset($ConlumnsBtn)){ $ConlumnsBtn=[]; }   {/php}
+
+
+<div class="admin-main">
+    {block name="header"}
+    {/block}
+    {notempty name='remark'}
+    <blockquote class="layui-elem-quote layui-quote-nm">
+        {$remark}
+    </blockquote>
+    {/notempty}
+    {if condition="($HeaderBtn) OR ($search) "}
+    <blockquote class="layui-elem-quote" style="background: none;">
+        <div  class="layui-input-inline"  id="from_head">
+            {$HeaderBtn}
+
+            <!--<a href="#" class="layui-btn layui-btn-small" id="getSelected">-->
+                <!--<i class="fa fa-shopping-cart" aria-hidden="true"></i> 获取全选信息-->
+            <!--</a>-->
+        </div>
+        {block name="top_content"}
+        {/block}
+
+        <form class="layui-form" style="float:right;" id="search_box">
+
+
+
+            <div class="layui-input-inline" style="margin:10px;">
+
+                {foreach $search as $searchItem}
+                {switch name="$searchItem[2]"}
+
+                    {case value="date_day"}
+
+                        <div class="layui-input-inline">
+                            <label class="layui-form-label">{$searchItem[1]}</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" name="{$searchItem[0]}" id="{$searchItem[0]}"
+                                       lay-verify="date" autocomplete="off"
+                                       value="{$searchItem[3]}"
+                                       class="layui-input" onclick="layui.laydate({elem: this, format: 'YYYY-MM-DD',istime: false})">
+                            </div>
+                        </div>
+                    {/case}
+
+                    {case value="date_second"}
+
+                        <div class="layui-input-inline">
+                            <label class="layui-form-label">{$searchItem[1]}</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" name="{$searchItem[0]}" id="{$searchItem[0]}"
+                                         autocomplete="off"
+                                       value="{$searchItem[3]}"
+                                       class="layui-input" onclick="layui.laydate({elem: this, format: 'YYYY-MM-DD hh:mm:ss',istime: true})">
+                            </div>
+                        </div>
+                    {/case}
+
+                    {case value="checkbox"}
+
+                        <div class="layui-input-inline">
+                            <label class="layui-form-label">{$searchItem[1]}</label>
+                            <div class="layui-input-block">
+                                {foreach $searchItem[3] as $key=>$val }
+
+                                <input type="checkbox" name="{$searchItem[0]}[]"
+                                       {if condition="$val eq $searchItem[4]"} checked="" {/if}s
+                                       {in name="$val" value="$searchItem[4]"} checked="" {/in}
+                                       value="{$val}" title="{$key}">
+                                {/foreach}
+                            </div>
+                        </div>
+                    {/case}
+
+                    {case value="checkbox_origin"}
+
+                    <div class="layui-input-inline" pane="">
+                        <label class="layui-form-label">{$searchItem[1]}</label>
+                        <div class="layui-input-block">
+                            {foreach $searchItem[3] as $key=>$val }
+                            <input type="checkbox" lay-skin="primary" name="{$searchItem[0]}[]"
+                                   {if condition="$val eq $searchItem[4]"} checked="" {/if}
+                            {in name="$val" value="$searchItem[4]"} checked="" {/in}
+                            value="{$val}" title="{$key}">
+                            {/foreach}
+                        </div>
+                    </div>
+
+                    {/case}
+
+                    {case value="select"}
+
+                        <div class="layui-input-inline">
+                            <label class="layui-form-label">{$searchItem[1]}</label>
+                            <div class="layui-input-inline">
+                                <select name="{$searchItem[0]}">
+                                    {foreach $searchItem[3] as $key=>$val }
+                                    <option value="{$val}" {if condition="$val eq $searchItem[4]"} selected="" {/if}
+                                    >{$key}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                    {/case}
+
+                    {//联动选择}
+                    {case value="select_group"}
+                    <div class="layui-input-inline select_group{$searchItem[0]}">
+                        <label class="layui-form-label">{$searchItem[1]}</label>
+                        {php} $i=0;{/php}
+                        {foreach $searchItem[3]["list"] as $defval=>$selectsanItem }
+                        {php} $i++;{/php}
+
+                        {if condition="$i elt $searchItem[3]['max_level'] "}{// 最大等级}
+                        <div class="layui-input-inline">
+                            <select name="{$searchItem[0]}" lay-filter="{$searchItem[0]}">
+                                {foreach $selectsanItem as $key=>$val }
+                                <option value="{$val}" {if condition="$val eq $defval"} selected="" {/if}
+                                >{$key}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                        {/if}
+                        {/foreach}
+                    </div>
+                    {/case}
+
+                    {case value="radio"}
+                        <div class="layui-input-inline">
+                            <label class="layui-form-label">{$searchItem[1]}</label>
+                            <div class="layui-input-block">
+                                {foreach $searchItem[3] as $key=>$val }
+                                <input type="radio" name="{$searchItem[0]}" value="{$val}"
+                                       {if condition="$val eq $searchItem[4]"} checked="" {/if}
+                                       title="{$key}" >
+                                {/foreach}
+
+                            </div>
+                        </div>
+                    {/case}
+
+                    {case value="hidden"}
+                    <input type="hidden" name="{$searchItem[0]}" value="{$searchItem[3]}">
+                    {/case}
+
+                    {case value="text" break="0"}
+                        <div class="layui-input-inline">
+                            <label class="layui-form-label">{$searchItem[1]}</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="{$searchItem[0]}" autocomplete=""  value="{$searchItem[3]}" placeholder="{$searchItem[4]?=$searchItem[4]}" class="layui-input">
+                            </div>
+                        </div>
+                    {/case}
+                    {default /}
+
+                {/switch}
+
+                {/foreach}
+
+                <!--<div class="layui-input-inline">-->
+                    <!--<input type="text" name="name" placeholder="支持模糊查询.." autocomplete="off" class="layui-input">-->
+                <!--</div>-->
+                {notempty name="search"}
+                    <div class=" layui-word-aux layui-input-inline" style="padding:0;float: right;">
+                        <button lay-filter="search" class="layui-btn layui-input-inline" lay-submit><i class="fa fa-search" aria-hidden="true"></i> 查询</button>
+                    </div>
+                {/notempty}
+            </div>
+        </form>
+
+    </blockquote>
+    {/if}
+    {block name="tree_top_content"}
+
+    {/block}
+
+    <fieldset class="layui-elem-field" style="width: 100%;margin-bottom: 30px;"  >
+        <legend>{$title}</legend>
+        <div class="layui-field-box layui-form">
+            <table class="layui-table admin-table">
+                <thead>
+                <tr>
+                    {notempty name='BatchBtn'}
+                    <th style="width: 30px;"><input type="checkbox" lay-filter="allselector" lay-skin="primary"></th>
+                    {/notempty}
+                    {foreach $columnsConfig as $val}
+                        <th>{$val[1]}</th>
+                    {/foreach}
+                    {if condition=" $ConlumnsBtn "}
+                    <th>操作</th>
+                    {/if}
+                </tr>
+                </thead>
+                <tbody id="content" style="height:auto">
+                    {block name="tbody_content"}{/block}
+                </tbody>
+
+            </table>
+            <div  class="layui-input-block" id="batch_btn"   >
+                {$BatchBtn}
+            </div>
+
+
+        </div>
+    </fieldset>
+    <div class="admin-table-page">
+        <div id="paged" class="page">
+        </div>
+        <a href="{:Url('ExportTask/index')}" id="end" style="position: fixed;right: 0;bottom: 0">
+            <i class="fa fa-download cur" aria-hidden="true" style="font-size: 30px"></i>
+        </a>
+    </div>
+</div>
+
+{block name="tpl_content"}
+<!--模板-->
+<script type="text/html" id="tpl">
+    {{# layui.each(d.list, function(index, item){ }}
+
+
+    <tr>
+        {notempty name='BatchBtn'}
+        <td>
+            <input type="checkbox" lay-skin="primary" value="{notempty name='BatchKey'} {{ item.{$BatchKey} }} {/notempty}">
+        </td>
+        {/notempty}
+        {foreach $columnsConfig as $val}
+            <td>{{ item.{$val[0]} }}</td>
+        {/foreach}
+        {if condition=" $ConlumnsBtn "}
+        <td>
+            {$ConlumnsBtn}
+        </td>
+        {/if}
+
+    </tr>
+    {{# }); }}
+</script>
+
+
+{/block}
+
+
+<script>
+    layui.config({
+        base: '__TPL__/js/'
+    });
+
+    function CurentTime()
+    {
+        var now = new Date();
+
+        var year = now.getFullYear();       //年
+        var month = now.getMonth() + 1;     //月
+        var day = now.getDate();            //日
+
+        var hh = now.getHours();            //时
+        var mm = now.getMinutes();          //分
+        var ss = now.getSeconds();           //秒
+
+        var clock = year + "-";
+
+        if(month < 10)
+            clock += "0";
+
+        clock += month + "-";
+
+        if(day < 10)
+            clock += "0";
+
+        clock += day + " ";
+
+        if(hh < 10)
+            clock += "0";
+
+        clock += hh + ":";
+        if (mm < 10) clock += '0';
+        clock += mm + ":";
+
+        if (ss < 10) clock += '0';
+        clock += ss;
+        return(clock);
+    }
+
+
+    layui.use(['paging', 'form','laydate'], function() {
+        var $ = layui.jquery,
+            paging = layui.paging(),
+            layerTips = parent.layer === undefined ? layui.layer : parent.layer, //获取父窗口的layer对象
+            layer = layui.layer, //获取当前窗口的layer对象
+            form = layui.form();
+            //{eq name='appdebug' value='1'}
+
+            var ajaxBack = $.ajax;
+            var ajaxCount = 0;
+            var allAjaxDone = function(){} //一行代码，就可以知道所有ajax请求什么时候结束
+            //由于get/post/getJSON等，最后还是调用到ajax，因此只要改ajax函数即可
+            $.ajax = function(setting){
+                ajaxCount++;
+                var cb = setting.complete;
+                setting.complete = function(data, status, xhr){
+                    if($.isFunction(cb)){
+                        cb.apply(setting.context, arguments);
+                    }
+                    var ResponseHeader=data.getResponseHeader;
+                    var apitrace=ResponseHeader("apitrace");
+
+                    if(apitrace && $("#btn_ajax_api_debug").length>0){
+                        $("#btn_ajax_api_debug").text("异步调试"+CurentTime() );
+                        $("#btn_ajax_api_debug").attr("href",apitrace);
+                    }
+                    else{
+                        $("#btn_ajax_api_debug").text("");
+                    }
+                }
+                ajaxCount--;
+                if(ajaxCount==0 && $.isFunction(allAjaxDone))
+                {
+                    allAjaxDone();
+                }
+
+                ajaxBack(setting);
+            }
+
+            //{/eq}
+
+
+        function getFromData(){
+            var search_box = {};
+            var formArray=$(".layui-form").serializeArray();
+            var select_group_list=[{foreach $search as $formkey=>$dataItem}{switch name="$dataItem[2]"}{case value="select_group"}"{$dataItem[0]}",{/case}{/switch}{/foreach} "_____"];
+            var select_min_level={ {foreach $search as $formkey=>$dataItem}{switch name="$dataItem[2]"}{case value="select_group"}
+                "{$dataItem[0]}" :{$dataItem[3]['min_level']},
+                {/case}{/switch}{/foreach} "________":0   };
+            var len = formArray.length;
+            var cur_num={};
+            for(var i=0;i<len;i++){
+
+                if(!formArray[i] || $.inArray(formArray[i].name,select_group_list) === -1){
+                    continue;
+                }
+                if(!cur_num[formArray[i].name]){
+                    cur_num[formArray[i].name]=1;
+                }else{
+                    cur_num[formArray[i].name]++;
+                }
+                if(cur_num[formArray[i].name] >select_min_level[formArray[i].name] &&  formArray[i]['value'] == "" ){
+                    formArray.splice(i,1);
+                }
+            }
+
+            $.each(formArray, function() {
+                if (search_box[this.name] && this.name.indexOf('[]') !=-1 ) {
+                    if (!search_box[this.name].push) {
+                        search_box[this.name] = [search_box[this.name]];
+                    }
+                    search_box[this.name].push(this.value || '');
+                } else {
+                    search_box[this.name] = this.value || '';
+                }
+            });
+            var PageIndex=paging.config.params.pageIndex;
+            var pageSize=paging.config.params.pageSize;
+
+            paging.config.params={};
+            paging.config.params.pageIndex=PageIndex;
+            paging.config.params.pageSize=pageSize;
+            return search_box;
+        }
+        var search_box = getFromData();
+
+
+
+
+        //{block name="paging_init"}
+
+
+
+
+        paging.init({
+            openWait: true,
+            url: '{$dataSourceUrl}', //地址
+            elem: '#content', //内容容器
+           // params: {}, // //发送到服务端的参数
+            params: search_box, // //发送到服务端的参数
+
+           // params: $("#search_box").serialize(), //发送到服务端的参数
+            type: 'POST',
+            tempElem: '#tpl', //模块容器
+            pageConfig: { //分页参数配置
+                elem: '#paged', //分页容器
+                pageSize: '{$pageSize}' //分页大小
+            },
+            success: function (result, status, xhr) { //$elem当前窗口的jq对象
+                if(result.count>0 && result.count!=100000000 ){
+                    $('#paged').append("<span> "+result.count+"条记录 </span>");
+                }
+
+                $("#content").find(".pj_btn").each(function () {
+                    var $that = $(this);
+                    $that.on('click', function () {
+                        pj_btn_click($(this));
+                    });
+                });
+                {block name="page_ajax_success_af"}{/block}
+            },
+            fail: function(msg) { //获取数据失败的回调
+                //alert('获取数据失败')
+            },
+            complate: function() { //完成的回调
+                //alert('处理完成');
+                //重新渲染复选框
+                form.render('checkbox');
+                form.on('checkbox(allselector)', function(data) {
+                    var elem = data.elem;
+
+                    $('#content').children('tr').each(function() {
+                        var $that = $(this);
+                        //全选或反选
+                        var $cbx = $that.children('td').eq(0).children('input[type=checkbox]')[0];
+                        if($cbx == undefined) {
+                            return true;
+                        }
+                        $cbx.checked = elem.checked;
+                        form.render('checkbox');
+                    });
+                });
+
+                //绑定所有编辑按钮事件
+                $('#content').children('tr').each(function() {
+                    var $that = $(this);
+                    $that.children('td:last-child').children('a[data-opt=edit]').on('click', function() {
+                        layer.msg($(this).data('name'));
+                    });
+
+                });
+
+            },
+        });
+
+
+
+        //{/block}
+        //
+
+
+
+
+        $("#from_head .pj_btn").on('click', function () {
+            pj_btn_click($(this));
+        });
+        $("#batch_btn .pj_btn").on('click', function () {
+            pj_btn_click($(this));
+        });
+
+        var addBoxIndex = -1;
+        function pj_btn_click($obj){
+            var fromName =  $obj.attr('data-fromname');
+            var confirm_text=$obj.attr("data-confirm-text");
+            var confirm_ico=$obj.attr("data-confirm-ico");
+            var BtnName=$obj.attr("data-BtnName");
+            var BtnUrl=$obj.attr("data-url");
+            var OpenType=$obj.attr("data-OpenType");
+//            layerTips.msg($obj.attr("data-url"));
+//            layerTips.msg("click");
+            if(addBoxIndex !== -1){
+                return;
+            }
+            
+            var callback=function(index){
+                if(confirm_text){
+                    layer.close(index);
+                }
+                var Data={};
+                if($obj.parents("#batch_btn").length>0){
+
+                    var check=new Array();
+                    $('#content').children('tr').each(function() {
+                        var $that = $(this);
+                        var $cbx = $that.children('td').eq(0).children('input[type=checkbox]')[0];
+                        if($cbx == undefined) {
+                            return true;
+                        }
+                        $cbx = $cbx.checked;
+                        if($cbx) {
+                            var n = $that.children('td').eq(0).children('input[type=checkbox]').val();
+                            check.push($.trim(n));
+                        }
+                    });
+                    Data.id=check;
+                    if(check.length<=0){
+                        layerTips.msg("请选择要操作的选项");
+                        return;
+                    }
+                }
+                if(fromName){
+                    Data =  $('#'+fromName).serialize();
+                }
+                if($obj.parents("#batch_btn").length>0 && OpenType == ''){ //批量按钮
+                    layerTips.msg("批量处理按钮已禁用");
+                    return ;
+                }
+
+                if($obj.parents("#batch_btn").length>0 && OpenType != 'Ajax'){ //批量按钮
+                    layerTips.msg("批量处理按钮暂时只支持使用Ajax方式");
+                    return ;
+                }
+                switch (OpenType) {
+                    case 'Pop': //弹窗打开
+                        //本表单通过ajax加载 --以模板的形式，当然你也可以直接写在页面上读取
+                        layer.open({
+                            type: 2,
+                            title:BtnName,
+                            area: ['700px', '450px'],
+                            fixed: false, //不固定
+                            maxmin: true,
+                            shade: 0.3,
+                            content: BtnUrl
+                        });
+
+                        layer.close(index);
+                        break;
+                    case 'NewTab': //设置新选项卡打开方式
+                        if(parent.tab){
+                            parent.tab.tabAdd({
+                                href: BtnUrl, //地址
+                                icon: "",
+                                title: BtnName
+                            });
+                        }else{
+                            window.open(BtnUrl);
+                        }
+
+
+                        break;
+                    case 'NewPage': //设置新页面打开方式
+                        window.location.href=BtnUrl;
+                        break;
+                    case 'Ajax': //设置异步请求打开方式
+                        /*异步请求加锁*/
+                        var lock =  $obj.attr('data-lock')
+                        $obj.addClass('layui-btn-disabled');
+                        if(lock == 'true'){
+                            layerTips.msg("服务处理中,请勿连续点击!");
+                            return true
+                        }
+                        $obj.attr('data-lock',true);
+                        $.ajax({
+                            url:BtnUrl,
+                            dataType:"json",
+                            data:Data,
+                            type:"post",
+                            success:function(data){
+                                /*异步请求解锁*/
+                                $obj.attr('data-lock',false);
+                                $obj.removeClass('layui-btn-disabled');
+                                if(data.rel && data.msg){
+                                    parent.layer.alert(data.msg,{icon: 6},function(index){
+                                        parent.layer.close(index);
+                                        if("{$ViewType}"=="tree"){
+                                            window.location.reload();
+                                        }else{
+                                            paging.get();
+                                        }
+                                    });
+                                }
+                                if(!data.rel && data.msg){
+                                    parent.layer.alert(data.msg,{icon: 5},function(index){
+                                        parent.layer.close(index);
+                                    });
+                                }
+                                if(data.rel){
+
+                                }
+                                if(data.dow){
+                                    var offset = $("#end").offset();  //结束的地方的元素
+                                        var flyer = $('<i class="fa fa-download cur" aria-hidden="true" style="font-size: 20px"></i>');
+                                        flyer.fly({
+                                            start: {
+                                                left: $obj.offset().left,
+                                                top: $obj.offset().top
+                                            },
+                                            end: {
+                                                left: offset.left + 10,
+                                                top: offset.top + 10,
+                                                width: 0,
+                                                height: 0
+                                            },
+                                            onEnd: function () {
+                                                this.destory();
+                                            }
+                                        });
+                                    // });
+                                    layerTips.msg("导出任务创建成功");
+                                }
+                            }
+                        });
+
+                        break;
+                }
+
+            }
+            if(confirm_text){
+                layer.confirm(confirm_text, {icon: confirm_ico, title:'提示'},callback);
+            }
+            else{
+                callback();
+            }
+
+        }
+        //获取所有选择的列
+        $('#getSelected').on('click', function() {
+            var names = '';
+            $('#content').children('tr').each(function() {
+                var $that = $(this);
+                var $cbx = $that.children('td').eq(0).children('input[type=checkbox]')[0];
+                if($cbx == undefined) {
+                    return true;
+                }
+                $cbx = $cbx.checked;
+                if($cbx) {
+                    var n = $that.children('td:last-child').children('a[data-opt=edit]').data('name');
+                    names += n + ',';
+                }
+            });
+            layer.msg('你选择的名称有：' + names);
+        });
+
+//        $('#search').on('click', function() {
+//            parent.layer.alert('你点击了搜索按钮')
+//        });
+//
+//        $(".pj_btn").on('click', function() {
+//            parent.layer.alert('你点击了搜索按钮')
+//        });
+
+
+
+//        $('#import').on('click', function() {
+//            var that = this;
+//            var index = layer.tips('只想提示地精准些', that, { tips: [1, 'white'] });
+//            $('#layui-layer' + index).children('div.layui-layer-content').css('color', '#000000');
+//        });
+        //paging.render();
+        //监听搜索表单的提交事件
+
+        form.on('submit(search)', function (data) {
+            {block name="submit_af"}{/block}
+            paging.get(getFromData());
+            return false;
+        });
+        $(window).on('resize', function (e) {
+            var $that = $(this);
+            //$('#content').height($that.height() - 92);
+        }).resize();
+
+        {foreach $search as $formkey=>$dataItem}
+        {switch name="$dataItem[2]"}
+        {case value="select_group"}
+        form.on('select({$dataItem[0]})', function(data){
+            var index=$(this).parents(".layui-input-inline").index(".select_group{$dataItem[0]}  .layui-input-inline");
+            $(".select_group{$dataItem[0]}  .layui-input-inline:gt("+index+")").remove();
+            var maxSelectLevel="{$dataItem[3]['max_level']}";
+            if($(".select_group{$dataItem[0]}  .layui-input-inline").length >=maxSelectLevel ){
+                return true;
+            }
+            $.ajax({
+                url:"{$dataItem[3]['data_url']}",
+                dataType:"json",
+                data:{id:data.value},
+                type:"post",
+                success:function(data){
+
+                    if(!data.rel && data.msg){
+                        layer.msg(data.msg, {icon: 2});
+                        return false;
+                    }
+                    if(data.list.length<=0){
+                        return true;
+                    }
+                    var op_html_str="<div class=\"layui-input-inline\"><select name=\"{$dataItem[0]}\" lay-filter=\"{$dataItem[0]}\"><option value=\"\">请选择</option> ";
+
+                    $.each(data.list,function (key,val) {
+                        op_html_str+="<option value=\""+val.id+"\">"+val.title+"</option>";
+                    });
+                    op_html_str+="</select></div>";
+                    $('.select_group{$dataItem[0]}  .layui-input-inline').last().after(op_html_str);
+                    layui.form().render('select');//重新渲染
+                }
+            });
+        });
+        {/case}
+        {/switch}
+        {/foreach}
+    });
+</script>
+</body>
+
+{block name="treefoot"}
+{/block}
+
+{block name="foot"}
+{/block}
+</html>

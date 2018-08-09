@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="__STATIC__/layui/plugins/layui/css/layui.css?v=12" media="all" />
+<script type="text/javascript" src="__STATIC__/layui/plugins/layui/layui.js"></script>
+
+<div class="layui-container">
+    <ul id="kinds"></ul>
+</div>
+<script>
+    var kinds = '{$kinds}';
+    console.log(kinds);
+    var kinds=JSON.parse(kinds);
+    layui.use('tree', function(){
+        layui.tree({
+            elem: '#kinds' //传入元素选择器
+            ,nodes:kinds
+        });
+    });
+</script>

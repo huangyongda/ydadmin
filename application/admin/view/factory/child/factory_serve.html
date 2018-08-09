@@ -1,0 +1,79 @@
+<li class="layui-timeline-item">
+    <i class="layui-icon layui-timeline-axis"></i>
+    <div class="layui-timeline-content layui-text">
+        <h3 class="layui-timeline-title">厂商服务
+            <button class="layui-btn layui-btn-primary layui-btn-mini editInfo"
+                    request-url="{:url('editFactoryServe',['uid'=>input('menu_id'),'factory_list'=> json_encode($factory_list)])}"
+                    title="修改">
+                <i class="layui-icon"></i>
+            </button>
+        </h3>
+        <div class="layui-field-box">
+            <table class="layui-table">
+                <tbody>
+                <tr>
+                    <td><span class="one sp_color">业务员：</span>
+                        <span class="two">
+
+                            {if condition="isset($factory_list.salesman) && $factory_list.salesman neq ''"}
+                                {$factory_list.salesman}
+                                {else /}
+                                \
+                            {/if}
+                        </span>
+                    </td>
+                    <td><span class="one sp_color">服务专员：</span>
+                        <span class="two">
+                             {if condition="isset($factory_list.zy_name) && $factory_list.zy_name neq ''"}
+                                    {$factory_list.zy_name}
+                                {else /}
+                                    \
+                            {/if}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="one sp_color">销售模式：</span>
+                        <span class="two">
+                            {if condition="isset($factory_list.sale_mode) && $factory_list.sale_mode neq ''"}
+                                    {$factory_list.sale_mode}
+                                {else /}
+                                    \
+                            {/if}
+                        </span>
+                    </td>
+                    <td><span class="one sp_color">品类：</span>
+                        <span class="two">
+                             {if condition="isset($factory_list.attr) && $factory_list.attr neq ''"}
+                                    {$factory_list.attr}
+                                {else /}
+                                    \
+                            {/if}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="one sp_color">推荐人：</span>
+                        <span class="two">
+                            {if condition="isset($factory_list.promotionRealname) && $factory_list.promotionRealname neq ''"}
+                                    {$factory_list.promotionRealname}
+                                {else /}
+                                    \
+                            {/if}
+                        </span>
+                    </td>
+                    <td><span class="one sp_color">客维专员：</span>
+                        <span class="two">
+                             {if condition="isset($factory_list.guest_name) && $factory_list.guest_name neq ''"}
+                                    {$factory_list.guest_name}
+                                {else /}
+                                    \
+                            {/if}
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</li>

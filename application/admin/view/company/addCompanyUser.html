@@ -1,0 +1,38 @@
+{// 模板继承 }
+{extend name="$viewbasetpl" /}
+{block name="foot"}
+<script>
+    layui.use(['form'], function() {
+        var form = layui.form(),
+            layer = layui.layer;
+        var $ = layui.jquery;
+        form.on('select(role_id)',function (data) {
+            $("#add_role").empty();//清空编辑页时默认数据
+            var role_id = data.value;
+            var requestUrl = "{:Url('Company/getRoleChildByRoleId')}";
+            $.ajax({
+                url:requestUrl,
+                type:'post',
+                dateType:'json',
+                data:{"role_id":role_id},
+                success:function(data){
+                     $("#add_role").empty();//清空div内的内容
+                    var strhtml = "";
+                    if(data.list.length<=0){
+                        layer.msg('所选角色无附属角色,若不需添加,可直接提交');
+                        return false;
+                    }
+                    $(data.list).each(function(index,value){
+                        strhtml  += "<input type='checkbox' id='role_add' name='add_role[]' " + "value = '" + value.id +"'  title='"+value.name +"'>";
+                    });
+                    if(!strhtml){
+                        return false;
+                    }
+                    $("#add_role").append(strhtml);//生成checkbox
+                    form.render("checkbox");//重载复选框
+                }
+            });
+        })
+    });
+</script>
+{/block}

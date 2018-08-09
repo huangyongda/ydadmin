@@ -1,0 +1,32 @@
+{// 模板继承 }
+{block name="top_content"}
+    <div class="layui-tab" lay-filter="test1">
+        <ul class="layui-tab-title">
+            {volist name="data" id="vo"}
+
+            <li lay-id="{$vo}" class="<?php if($cur == \trim($vo)){ echo 'layui-this' ;}?>" lay-url = "{:Url('/admin/config/sys_config',['type'=>trim($vo)])}"><a href="{:Url('/admin/config/sys_config',['type'=>trim($vo)])}">{$key}</a></li>
+            {/volist}
+        </ul>
+    </div>
+{/block}
+{extend name="$viewbasetpl" /}
+{block name="foot"}
+<script>
+    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+    layui.use(['element'], function() {
+        var $ = layui.jquery;
+        var element = layui.element();
+        element.on('tab(test1)', function () {
+            var url = this.getAttribute('lay-url');
+//            $.ajax({
+//                type: "POST",
+//                url: url,
+//                success: function(msg){
+//                }
+//            });
+//        });
+
+        });
+    })
+</script>
+{/block}

@@ -1,0 +1,106 @@
+<div class="layui-timeline-content layui-text">
+
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+        <legend>回访</legend>
+    </fieldset>
+
+
+
+    <form class="layui-form" action="visitsubmit">
+
+        <input type="hidden" name="id" value="{$info.consumer_content.id}">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">消费者评价</label>
+            <div class="layui-input-inline" >
+                <select name="review_cus"  id="review_cus" lay-filter="review_cus"  {eq name="info.consumer_content.status" value="1"} disabled {/eq}>
+                    <option value="0" {eq name="$info.consumer_content.visiter.list.review_cus" value="0"} selected=""{/eq}>请选择</option>
+                    <option value="1" {eq name="$info.consumer_content.visiter.list.review_cus" value="1"} selected=""{/eq}>1好评</option>
+                    <option value="2" {eq name="$info.consumer_content.visiter.list.review_cus" value="2"} selected=""{/eq}>2好评</option>
+                    <option value="3" {eq name="$info.consumer_content.visiter.list.review_cus" value="3"} selected=""{/eq}>3中评</option>
+                    <option value="4" {eq name="$info.consumer_content.visiter.list.review_cus" value="4"} selected=""{/eq}>4差评</option>
+                    <option value="5" {eq name="$info.consumer_content.visiter.list.review_cus" value="5"} selected=""{/eq}>5差评</option>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_review_cus"></div>
+
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">冻结工单</label>
+            <div class="layui-input-inline">
+                <select name="review_freeze"  lay-filter="review_freeze"  {eq name="info.consumer_content.status" value="1"} disabled {/eq}>
+                    <option value="-1"{eq name="$info.consumer_content.visiter.list.review_freeze" value="-1"} selected=""{/eq}>请选择</option>
+                    <option value="0" {eq name="$info.consumer_content.visiter.list.review_freeze" value="0"} selected=""{/eq}>不冻结</option>
+                    <option value="1" {eq name="$info.consumer_content.visiter.list.review_freeze" value="1"} selected=""{/eq}>冻结</option>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_review_freeze"></div>
+
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">消费者是否收到评价通知</label>
+            <div class="layui-input-inline">
+                <select name="accept"  lay-filter="send_msg" {eq name="info.consumer_content.status" value="1"} disabled {/eq}>
+                <option value="-1"  {eq name="$info.consumer_content.accept_msg" value="-1"} selected=""{/eq}>请选择</option>
+                <option value="1" {eq name="$info.consumer_content.accept_msg" value="1"} selected=""{/eq}>已收到</option>
+                <option value="0" {eq name="$info.consumer_content.accept_msg" value="0"} selected=""{/eq}>没有收到</option>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_accept"></div>
+
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">消费者是否已经回复短信</label>
+            <div class="layui-input-inline">
+                <select name="send_msg"  id="send_msg" lay-filter="accept" {eq name="info.consumer_content.status" value="1"} disabled {/eq}>
+                    <option value="-1"  {eq name="$info.consumer_content.send_msg" value="-1"} selected=""{/eq}>请选择</option>
+                    <option value="1" {eq name="$info.consumer_content.send_msg" value="1"} selected=""{/eq}>消费者已经回复</option>
+                    <option value="0" {eq name="$info.consumer_content.send_msg" value="0"} selected=""{/eq}>消费者没有回复</option>
+                </select>
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_send_msg"></div>
+
+        </div>
+        <div class="layui-form-item" id="consumer_negative_comment" {lt name="$info.consumer_content.visiter.list.review_cus" value="4"} style="display: none" {/lt}>
+        <label class="layui-form-label">消费者差评的原因</label>
+        <div class="layui-input-block">
+            <!--<input type="radio" name="city" value="0" checked="" title="请选择" >-->
+            {volist name="info.consumer_negative_comment" id="vo"}
+            <input type="radio" name="discontent_reason"  value="{$vo.reason_id}" title="{$vo.content}"  {if condition="$info.consumer_content.discontent_reason eq $vo.reason_id"} checked="" {/if} {eq name="info.consumer_content.status" value="1"} disabled {/eq} >
+            {/volist}
+        </div>
+        <div class="layui-form-mid layui-word-aux remark_discontent_reason"></div>
+        </div>
+        <div class="layui-form-item" id="consumer_not_reply" {neq name="$info.consumer_content.send_msg" value="0"} style="display: none" {/neq}>
+            <label class="layui-form-label">消费者没有回复的原因</label>
+            <div class="layui-input-block">
+                <!--<input type="radio" name="city" value="0" checked=""  title="请选择" >-->
+                {volist name="info.consumer_not_reply" id="vo"}
+                <input type="radio" name="msg_reason" value="{$vo.reason_id}" title="{$vo.content}" {if condition="$info.consumer_content.not_send_msg_reason eq $vo.reason_id"} checked="" {/if} {eq name="info.consumer_content.status" value="1"} disabled {/eq} >
+               {/volist}
+
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_msg_reason"></div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">处理结果</label>
+            <div class="layui-input-block" >
+                <textarea placeholder="请输入内容" class="layui-textarea" name="content"  {eq name="info.consumer_content.status" value="1"} disabled {/eq} >{$info.consumer_content.content}</textarea>
+            </div>
+            <div class="layui-form-mid layui-word-aux remark_content"></div>
+        </div>
+
+        <div class="layui-form-item"   {eq name="info.consumer_content.status" value="1"} style="display: none" {/eq}>
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" request-url="{:url('visitsubmit')}" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
