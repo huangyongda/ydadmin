@@ -1,7 +1,7 @@
 {
   "name": "huangyongda/ydadmin",
   "description": "后台通用模板 后端再也不用为了写前端而烦恼了。",
-  "license": "Apache",
+  "license": "Apache-2.0",
   "authors": [
     {
       "name": "huangyongda",
